@@ -1,10 +1,4 @@
-import { Hero } from '@/components/Hero';
-import  Banner from '@/components/Banner';
-import  Gallery from '@/components/Gallery';
-import { DataSharingGuidance } from "@/components/LinkList/DataSharingGuidance";
-import {DataSharingProcess} from "@/components/DataProcessing";
-import {DataSharingResources} from "@/components/Resources";
-
+import { DatasetProcessingInfo } from "@/components/datasets/DatasetProcessingInfo";
 
 export default async function Home() {
   return <HomeContent/>;
@@ -13,12 +7,7 @@ export default async function Home() {
 function HomeContent() {
   return (
     <main>
-      <Hero />
-      <Banner />
-      <Gallery />
-      <DataSharingGuidance />
-      <DataSharingProcess />
-      <DataSharingResources />
+      <DatasetProcessingInfo />
     </main>
   );
 }

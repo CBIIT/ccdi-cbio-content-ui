@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Geist, Geist_Mono, Open_Sans, Poppins, Lato, Inter, Nunito_Sans, Nunito, Public_Sans, Rubik } from "next/font/google";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -71,9 +69,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${openSans.variable} ${poppins.variable} ${lato.variable} ${inter.variable} ${nunitoSans.variable} ${nunito.variable} ${publicSans.variable} ${rubik.variable} antialiased`}
       >
-        <Header />
         {children}
-        <Footer />
       </body>
     </html>
   );
