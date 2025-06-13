@@ -1,4 +1,4 @@
-import { DatasetProcessingInfo } from "@/components/datasets/DatasetProcessingInfo";
+import { DatasetAndReleaseNotes } from "@/components/DatasetAndReleaseNotes";
 
 export default async function Home() {
   return <HomeContent/>;
@@ -7,7 +7,7 @@ export default async function Home() {
 function HomeContent() {
   return (
     <main>
-      <DatasetProcessingInfo />
+      <DatasetAndReleaseNotes />
     </main>
   );
 }
