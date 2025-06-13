@@ -14,7 +14,7 @@ export const TabItem: React.FC<TabItemProps> = ({
 }) => {
   return (
     <button
-      className={`flex relative gap-2.5 justify-center items-end px-6 py-5 rounded-tl-md rounded-tr-md border-t border-r border-l border-solid border-t-cyan-600 border-x-cyan-600 transition-colors duration-200 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 ${
+      className={`flex relative gap-2.5 justify-center items-end px-6 py-5 rounded-tl-md rounded-tr-md border-t border-r border-l border-solid border-t-cyan-600 border-x-cyan-600 transition-colors duration-200 hover:bg-gray-50 hover:cursor-pointer focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 ${
         isActive ? 'bg-white' : ''
       }`}
       onClick={onClick}

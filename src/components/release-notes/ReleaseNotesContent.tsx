@@ -35,145 +35,92 @@ export const ReleaseNotesContent: React.FC = () => {
         <br />
         Data Model Updates
         <br />
-        Added more properties to Treatment node
-        <br />
-        Added slim_url property for IDC imaging data
-        <br />
-        Added study status
-        <br />
-        Renamed &quot;COG Clinical Report&quot; to &quot;COG Clinical
-        Data&quot;
-        <br />
-        Updated synonym properties to include CPI mapping data
-        <br />
+        <ul className="list-disc list-inside">
+          <li>Added more properties to Treatment node</li>
+          <li>Added slim_url property for IDC imaging data</li>
+          <li>Added study status</li>
+          <li>Renamed &quot;COG Clinical Report&quot; to &quot;COG Clinical Data&quot;</li>
+          <li>Updated synonym properties to include CPI mapping data</li>
+        </ul>
         New Data Sets
         <br />
-        CCDI Pediatric In Vivo Testing Program - Neuroblastoma (PHS003163)
-        <br />
-        TARGET: Acute Lymphoblastic Leukemia (ALL) Pilot Phase 1 (PHS000463)
-        <br />
-        TARGET: Acute Lymphoblastic Leukemia (ALL) Expansion Phase 2
-        (PHS000464)
-        <br />
-        TARGET: Acute Myeloid Leukemia (AML) (PHS000465)
-        <br />
+        <ul className="list-disc list-inside">
+          <li>CCDI Pediatric In Vivo Testing Program - Neuroblastoma (PHS003163)</li>
+          <li>TARGET: Acute Lymphoblastic Leukemia (ALL) Pilot Phase 1 (PHS000463)</li>
+          <li>TARGET: Acute Lymphoblastic Leukemia (ALL) Expansion Phase 2 (PHS000464)</li>
+          <li>TARGET: Acute Myeloid Leukemia (AML) (PHS000465)</li>
+        </ul>
         Updated Data Sets
         <br />
-        CCDI Pediatric In Vivo Testing Program - Leukemia (PHS003164)
-        <br />
-        Comprehensive Genomic Sequencing of Pediatric Cancer Cases (CMRI/KUCC)
-        (PHS002529)
-        <br />
-        Enhancement of Data Sharing in Pediatric, Adolescent and Young Adult
-        Cancers (PHS002431)
-        <br />
-        Genomic Sequencing of Pediatric Rhabdomyosarcoma (PHS000720)
-        <br />
-        Identification and Targeting of Treatment Resistant Progenitor
-        Populations in T-cell Acute Lymphoblastic (PHS003432)
-        <br />
-        Integrating Longitudinal Clinical, Sociodemographic and Genomic Data
-        into the NCCR (PHS002677)
-        <br />
-        Molecular Characterization across Pediatric Brain Tumors and Other
-        Solid and Hematologic Malignancies for Research, Diagnostic, and
-        Precision Medicine (PHS002517)
-        <br />
-        Molecular Characterization Initiative (PHS002790)
-        <br />
-        OncoKids - NGS Panel for Pediatric Malignancies (PHS002518) TARGET:
-        Cancer Model Systems (MDLS): Cell Lines and Xenografts (including PPTP)
-        (PHS000469)
-        <br />
-        TARGET: Kidney, Clear Cell Sarcoma of the Kidney (CCSK) (PHS000466)
-        <br />
-        TARGET: Kidney, Rhabdoid Tumor (RT)(PHS000470) TARGET: Kidney, Wilms
-        Tumor (WT)(PHS000471)
-        <br />
-        TARGET: Neuroblastoma (NBL) (PHS000467)
-        <br />
-        TARGET: Osteosarcoma (OS) (PHS000468)
-        <br />
-        UCSF Database for the Advancement of JMML - Integration of Metadata
-        with Omic Data (PHS002504)
-        <br />
+        <ul className="list-disc list-inside">
+          <li>CCDI Pediatric In Vivo Testing Program - Leukemia (PHS003164)</li>
+          <li>Comprehensive Genomic Sequencing of Pediatric Cancer Cases (CMRI/KUCC) (PHS002529)</li>
+          <li>Enhancement of Data Sharing in Pediatric, Adolescent and Young Adult Cancers (PHS002431)</li>
+          <li>Genomic Sequencing of Pediatric Rhabdomyosarcoma (PHS000720)</li>
+          <li>Identification and Targeting of Treatment Resistant Progenitor Populations in T-cell Acute Lymphoblastic (PHS003432)</li>
+          <li>Integrating Longitudinal Clinical, Sociodemographic and Genomic Data into the NCCR (PHS002677)</li>
+          <li>Molecular Characterization across Pediatric Brain Tumors and Other Solid and Hematologic Malignancies for Research, Diagnostic, and Precision Medicine (PHS002517)</li>
+          <li>Molecular Characterization Initiative (PHS002790)</li>
+          <li>OncoKids - NGS Panel for Pediatric Malignancies (PHS002518)</li>
+          <li>TARGET: Kidney, Clear Cell Sarcoma of the Kidney (CCSK) (PHS000466)</li>
+          <li>TARGET: Kidney, Rhabdoid Tumor (RT)(PHS000470)</li>
+          <li>TARGET: Neuroblastoma (NBL) (PHS000467)</li>
+          <li>TARGET: Osteosarcoma (OS) (PHS000468)</li>
+          <li>UCSF Database for the Advancement of JMML - Integration of Metadata with Omic Data (PHS002504)</li>
+        </ul>
         Removed Data Sets
         <br />
-        Feasibility and Clinical Utility of Whole Genome Profiling in
-        Pediatric and Young Adult Cancers (PHS002620)
-        <br />
-        Clonal evolution during metastatic spread in high-risk neuroblastoma
-        (PHS003111)
-        <br />
+        <ul className="list-disc list-inside">
+          <li>Feasibility and Clinical Utility of Whole Genome Profiling in Pediatric and Young Adult Cancers (PHS002620)</li>
+          <li>Clonal evolution during metastatic spread in high-risk neuroblastoma (PHS003111)</li>
+        </ul>
         CCDI Hub Site Updates
         <br />
         General Site
         <br />
-        Added tab under News page for release note notifications
-        <br />
-        Added ecDNA resource block on Home page and menu link from Resources
-        menu
-        <br />
-        Added dedicated page to display full release notes
-        <br />
-        Made persistent link to user guide from About menu
-        <br />
-        Updated user guide
-        <br />
+        <ul className="list-disc list-inside">
+          <li>Added tab under News page for release note notifications</li>
+          <li>Added ecDNA resource block on Home page and menu link from Resources menu</li>
+          <li>Added dedicated page to display full release notes</li>
+          <li>Made persistent link to user guide from About menu</li>
+          <li>Updated user guide</li>
+        </ul>
         Molecular Characterization Initiative (MCI) page
         <br />
-        Added link to COG transformation script GitHub repository
-        <br />
-        Increased text thickness to improve readability
-        <br />
-        Fixed bug resulting in unintended outlines when interacting with donut
-        chart
-        <br />
-        Removed alt text unintentionally appearing in main page text under
-        image
-        <br />
-        Updated enrollment counts as of February 2025
-        <br />
+        <ul className="list-disc list-inside">
+          <li>Added link to COG transformation script GitHub repository</li>
+          <li>Increased text thickness to improve readability</li>
+          <li>Fixed bug resulting in unintended outlines when interacting with donut chart</li>
+          <li>Removed alt text unintentionally appearing in main page text under image</li>
+          <li>Updated enrollment counts as of February 2025</li>
+        </ul>
         CCDI Hub Explore Dashboard
         <br />
         Facet updates
         <br />
-        Added facet for study status
-        <br />
-        Added text search option to sample anatomic site facet
-        <br />
-        Increased participant set upload limit to 5,000
-        <br />
+        <ul className="list-disc list-inside">
+          <li>Added facet for study status</li>
+          <li>Added text search option to sample anatomic site facet</li>
+          <li>Increased participant set upload limit to 5,000</li>
+        </ul>
         Tables
         <br />
-        Added cohort selector feature to Participants tab
-        <br />
-        Added column to display study status
-        <br />
-        Added commas to all numbers larger than 1,000 in table headers and
-        pagination
-        <br />
-        Added fields from Treatment, Treatment Response, and Survival nodes to
-        Participants tab
-        <br />
-        Added indicator, hover dialog, and popup table summary for participants
-        with additional information mapped in the Cancer Participant Index
-        (CPI)
-        <br />
-        Changed column label &quot;Sex&quot; to &quot;Sex at Birth&quot; to
-        match model
-        <br />
-        Exposed properties under generic_file node
-        <br />
-        Made visible columns customizable by checkbox selection
-        <br />
-        Removed separate Diagnosis tab and moved relevant fields to
-        Participants and Samples tabs
-        <br />
+        <ul className="list-disc list-inside">
+          <li>Added cohort selector feature to Participants tab</li>
+          <li>Added column to display study status</li>
+          <li>Added commas to all numbers larger than 1,000 in table headers and pagination</li>
+          <li>Added fields from Treatment, Treatment Response, and Survival nodes to Participants tab</li>
+          <li>Added indicator, hover dialog, and popup table summary for participants with additional information mapped in the Cancer Participant Index (CPI)</li>
+          <li>Changed column label &quot;Sex&quot; to &quot;Sex at Birth&quot; to match model</li>
+          <li>Exposed properties under generic_file node</li>
+          <li>Made visible columns customizable by checkbox selection</li>
+          <li>Removed separate Diagnosis tab and moved relevant fields to Participants and Samples tabs</li>
+        </ul>
         Cart
         <br />
-        Added commas to all numbers larger than 1,000 in table headers and
-        pagination and in cart icon
+        <ul className="list-disc list-inside">
+          <li>Added commas to all numbers larger than 1,000 in table headers and pagination and in cart icon</li>
+        </ul>
       </div>
     </section>
   );

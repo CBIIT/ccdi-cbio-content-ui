@@ -37,10 +37,11 @@ export const DatasetAndReleaseNotes: React.FC = () => {
   
   return (
     <>
-      <section className="flex relative flex-col gap-1.5 items-center self-stretch bg-sky-50 border-b border-solid border-b-cyan-600 h-[88px] max-sm:pb-5 max-sm:h-auto">
-        <div className="flex relative flex-col gap-1.5 justify-end items-start self-stretch max-w-[1260px] mx-30">
+      <h1 className="sr-only">Dataset and Release Notes</h1>
+      <section className="flex relative flex-col gap-1.5 items-center self-stretch bg-sky-50 border-b border-solid border-b-cyan-600 h-[88px] max-sm:h-auto">
+        <div className="flex relative flex-col gap-1.5 justify-end items-start self-stretch max-w-[1260px] mx-30 max-sm:mx-5">
           <nav
-            className="flex relative gap-6 items-end self-stretch h-[88px] max-w-[1380px] max-md:flex-col max-md:h-auto max-sm:pb-5 max-sm:h-auto"
+            className="flex relative gap-6 items-end self-stretch h-[88px] max-w-[1380px] max-md:flex-col max-sm:flex-row max-md:h-auto max-sm:h-auto"
             role="tablist"
             aria-label="Dataset and Release Notes Navigation"
           >
