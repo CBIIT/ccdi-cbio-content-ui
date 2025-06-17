@@ -13,11 +13,12 @@ function rehypeCustomTheme() {
     visit(tree, 'element', (node) => {
       if (node.tagName === 'p') {
         node.properties = node.properties || {};
-        node.properties.className = ['mb-1', 'max-md:max-w-full'];
+        node.properties.className = ['max-md:max-w-full'];
       }
       if (node.tagName === 'a') {
         node.properties = node.properties || {};
         node.properties.className = ['text-blue-800', 'text-decoration-line: underline'];
+        node.properties.target = '_blank';
       }
       if (node.tagName === 'ul') {
         node.properties = node.properties || {};
