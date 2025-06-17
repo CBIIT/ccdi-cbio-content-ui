@@ -1,8 +1,10 @@
 'use client';
-import * as React from 'react';
+
+import { useState, FC, KeyboardEvent } from 'react';
 import { TabItem } from './TabItem';
 import ReleaseNotes from './release-notes/ReleaseNotes';
 import Dataset from './datasets/Dataset';
+import { GitHubRelease, GitHubDataset } from '@/app/page';
 
 const tabs = [
   {
@@ -15,13 +17,13 @@ const tabs = [
   }
 ];
 
-export const DatasetAndReleaseNotes: React.FC = () => {
-  const [activeTabId, setActiveTabId] = React.useState(tabs[0].id);
+export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDataset[] }> = ({ releases, datasets }) => {
+  const [activeTabId, setActiveTabId] = useState(tabs[0].id);
   const handleTabClick = (tabId: string) => {
     setActiveTabId(tabId);
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent, tabId: string) => {
+  const handleKeyDown = (event: KeyboardEvent, tabId: string) => {
     if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       handleTabClick(tabId);
@@ -62,8 +64,8 @@ export const DatasetAndReleaseNotes: React.FC = () => {
         </div>
       </section>
       <section>
-        {activeTabId === tabs[0].id && <ReleaseNotes />}
-        {activeTabId === tabs[1].id && <Dataset />}
+        {activeTabId === tabs[0].id && <ReleaseNotes releases={releases} />}
+        {activeTabId === tabs[1].id && <Dataset datasets={datasets} />}
       </section>
     </>
   );

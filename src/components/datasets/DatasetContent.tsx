@@ -1,16 +1,13 @@
-'use client';
-import * as React from 'react';
+import { FC } from 'react';
 
-interface DatasetContentProps {
-  children: React.ReactNode;
-}
-
-export const DatasetContent: React.FC<DatasetContentProps> = ({
-  children,
+export const DatasetContent: FC<{ content: string }> = ({
+  content
 }) => {
   return (
-    <section className="pt-0.5 mt-1 w-full text-sm font-semibold leading-5 text-neutral-800 max-md:max-w-full">
-      {children}
+    <section
+      className="pt-0.5 mt-1 w-full text-sm font-semibold leading-5 text-neutral-800 max-md:max-w-full"
+      dangerouslySetInnerHTML={{ __html: content }}
+    >
     </section>
   );
 };
