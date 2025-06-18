@@ -32,6 +32,7 @@ async function fetchContent(slug: string) {
 }
 
 export default function DataAccessCards({ datasets }: { datasets: GitHubDataset[] }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [processedDatasets, setProcessedDatasets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 

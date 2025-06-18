@@ -80,7 +80,7 @@ async function fetchDatasets() {
 }
 
 export default function Home() {
-  const [releases, setReleases] = useState<any[]>([]);
+  const [releases, setReleases] = useState<GitHubRelease[]>([]);
   const [datasets, setDatasets] = useState<GitHubDataset[]>([]);
   const [loading, setLoading] = useState(true);
 
