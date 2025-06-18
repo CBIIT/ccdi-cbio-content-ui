@@ -17,7 +17,7 @@ function rehypeCustomTheme() {
       }
       if (node.tagName === 'a') {
         node.properties = node.properties || {};
-        node.properties.className = ['text-blue-800', 'text-decoration-line: underline'];
+        node.properties.className = ['text-[rgba(69,82,153,1)]', 'text-decoration-line: underline'];
         node.properties.target = '_blank';
       }
       if (node.tagName === 'ol') {
