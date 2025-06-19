@@ -32,6 +32,7 @@ async function fetchContent(year: string, slug: string) {
 
 export default function ReleaseNotes({ releases }: { releases: GitHubRelease[] }) {
   const flattenedReleasesWithReleaseNotes = releases.map(release => release.releaseNotes).flat();
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [releaseNotes, setReleaseNotes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
