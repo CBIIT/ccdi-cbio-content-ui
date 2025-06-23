@@ -112,7 +112,7 @@ export default function Home() {
   }
 
   return (
-    <main>
+    <main id="main-content">
       <DatasetAndReleaseNotes releases={releases} datasets={datasets} />
     </main>
   );
