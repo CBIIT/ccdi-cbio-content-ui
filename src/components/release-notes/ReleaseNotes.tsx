@@ -10,9 +10,8 @@ import {
   extractDates,
   extractContent
 } from '@/app/release-notes/handleReleaseNotes';
-import { isDev } from '@/app/page';
 
-async function fetchContent(year: string, slug: string) {
+async function fetchContent(year: string, slug: string, isDev: boolean) {
   const response = await fetch(
     `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}/${slug}.md${isDev ? '?ref=dev' : ''}`,
     {
@@ -31,7 +30,7 @@ async function fetchContent(year: string, slug: string) {
   return content;
 }
 
-export default function ReleaseNotes({ releases }: { releases: GitHubRelease[] }) {
+export default function ReleaseNotes({ releases, isDev }: { releases: GitHubRelease[], isDev: boolean }) {
   const flattenedReleasesWithReleaseNotes = releases.map(release => release.releaseNotes).flat();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [releaseNotes, setReleaseNotes] = useState<any[]>([]);
@@ -47,7 +46,7 @@ export default function ReleaseNotes({ releases }: { releases: GitHubRelease[] }
             if (!year || !slug) {
               return null;
             }
-            const fetchedContent = await fetchContent(year, slug);
+            const fetchedContent = await fetchContent(year, slug, isDev);
             const fetchedProcessedContent = await processMarkdown(fetchedContent);
             const titles = extractTitles(fetchedProcessedContent);
             const dates = extractDates(fetchedProcessedContent);

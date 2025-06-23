@@ -17,7 +17,7 @@ const tabs = [
   }
 ];
 
-export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDataset[] }> = ({ releases, datasets }) => {
+export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDataset[], isDev: boolean }> = ({ releases, datasets, isDev }) => {
   const [activeTabId, setActiveTabId] = useState(tabs[0].id);
   const [contentHeight, setContentHeight] = useState<number | undefined>(0);
 
@@ -80,8 +80,8 @@ export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: G
         </div>
       </section>
       <section>
-        {activeTabId === tabs[0].id && <ReleaseNotes releases={releases} />}
-        {activeTabId === tabs[1].id && <Dataset datasets={datasets} />}
+        {activeTabId === tabs[0].id && <ReleaseNotes releases={releases} isDev={isDev} />}
+        {activeTabId === tabs[1].id && <Dataset datasets={datasets} isDev={isDev} />}
       </section>
     </>
   );
