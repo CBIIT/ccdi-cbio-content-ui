@@ -11,10 +11,11 @@ import {
   extractDates,
   extractContent
 } from '@/app/datasets/handleDatasets';
+import { isDev } from '@/app/page';
 
 async function fetchContent(slug: string) {
   const response = await fetch(
-    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets/${slug}.md`,
+    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets/${slug}.md${isDev ? '?ref=dev' : ''}`,
     {
       headers: {
         'Accept': 'application/vnd.github.v3.raw',

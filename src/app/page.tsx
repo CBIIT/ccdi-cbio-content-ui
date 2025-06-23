@@ -22,9 +22,13 @@ export interface GitHubDataset {
   type: string;
 }
 
+export const isDev = (process.env.NODE_ENV === 'development')
+  || (window?.location.hostname.split('.')[0].split('-')[1] === 'dev')
+  || (window?.location.hostname.split('.')[0].split('-')[1] === 'qa');
+
 async function fetchReleases() {
   const response = await fetch(
-    'https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases',
+    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases${isDev ? '?ref=dev' : ''}`,
     {
       headers: {
         'Accept': 'application/vnd.github.v3+json',
@@ -43,7 +47,7 @@ async function fetchReleases() {
 
 async function fetchReleaseNotes(year: string) {
   const response = await fetch(
-    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}`,
+    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}${isDev ? '?ref=dev' : ''}`,
     {
       headers: {
         'Accept': 'application/vnd.github.v3+json',
@@ -62,7 +66,7 @@ async function fetchReleaseNotes(year: string) {
 
 async function fetchDatasets() {
   const response = await fetch(
-    'https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets',
+    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets${isDev ? '?ref=dev' : ''}`,
     {
       headers: {
         'Accept': 'application/vnd.github.v3+json',

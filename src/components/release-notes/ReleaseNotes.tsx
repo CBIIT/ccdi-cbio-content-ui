@@ -10,10 +10,11 @@ import {
   extractDates,
   extractContent
 } from '@/app/release-notes/handleReleaseNotes';
+import { isDev } from '@/app/page';
 
 async function fetchContent(year: string, slug: string) {
   const response = await fetch(
-    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}/${slug}.md`,
+    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}/${slug}.md${isDev ? '?ref=dev' : ''}`,
     {
       headers: {
         'Accept': 'application/vnd.github.v3.raw',
