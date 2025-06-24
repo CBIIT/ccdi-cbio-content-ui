@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FC, KeyboardEvent } from 'react';
+import { useState, FC, KeyboardEvent, useEffect } from 'react';
 import { TabItem } from './TabItem';
 import ReleaseNotes from './release-notes/ReleaseNotes';
 import Dataset from './datasets/Dataset';
@@ -17,10 +17,18 @@ const tabs = [
   }
 ];
 
-export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDataset[] }> = ({ releases, datasets }) => {
+export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDataset[], isDev: boolean }> = ({ releases, datasets, isDev }) => {
   const [activeTabId, setActiveTabId] = useState(tabs[0].id);
+  const [contentHeight, setContentHeight] = useState<number | undefined>(0);
+
+  const handleContentHeight = () => {
+    setContentHeight(document.querySelector('#main-content')?.scrollHeight);
+    window.parent.postMessage(['setHeight', contentHeight], '*');
+  };
+
   const handleTabClick = (tabId: string) => {
     setActiveTabId(tabId);
+    handleContentHeight();
   };
 
   const handleKeyDown = (event: KeyboardEvent, tabId: string) => {
@@ -36,6 +44,14 @@ export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: G
       handleTabClick(tabs[nextIndex].id);
     }
   };
+
+  useEffect(() => {
+    setTimeout(() => {
+      const height = document.querySelector('#main-content')?.scrollHeight;
+      setContentHeight(height);
+      window.parent.postMessage(['setHeight', height], '*');
+    }, 2000);
+  }, []);
   
   return (
     <>
@@ -64,8 +80,8 @@ export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: G
         </div>
       </section>
       <section>
-        {activeTabId === tabs[0].id && <ReleaseNotes releases={releases} />}
-        {activeTabId === tabs[1].id && <Dataset datasets={datasets} />}
+        {activeTabId === tabs[0].id && <ReleaseNotes releases={releases} isDev={isDev} />}
+        {activeTabId === tabs[1].id && <Dataset datasets={datasets} isDev={isDev} />}
       </section>
     </>
   );

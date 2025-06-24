@@ -11,9 +11,9 @@ import {
   extractContent
 } from '@/app/release-notes/handleReleaseNotes';
 
-async function fetchContent(year: string, slug: string) {
+async function fetchContent(year: string, slug: string, isDev: boolean) {
   const response = await fetch(
-    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}/${slug}.md`,
+    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}/${slug}.md${isDev ? '?ref=dev' : ''}`,
     {
       headers: {
         'Accept': 'application/vnd.github.v3.raw',
@@ -30,7 +30,7 @@ async function fetchContent(year: string, slug: string) {
   return content;
 }
 
-export default function ReleaseNotes({ releases }: { releases: GitHubRelease[] }) {
+export default function ReleaseNotes({ releases, isDev }: { releases: GitHubRelease[], isDev: boolean }) {
   const flattenedReleasesWithReleaseNotes = releases.map(release => release.releaseNotes).flat();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [releaseNotes, setReleaseNotes] = useState<any[]>([]);
@@ -46,7 +46,7 @@ export default function ReleaseNotes({ releases }: { releases: GitHubRelease[] }
             if (!year || !slug) {
               return null;
             }
-            const fetchedContent = await fetchContent(year, slug);
+            const fetchedContent = await fetchContent(year, slug, isDev);
             const fetchedProcessedContent = await processMarkdown(fetchedContent);
             const titles = extractTitles(fetchedProcessedContent);
             const dates = extractDates(fetchedProcessedContent);
@@ -77,7 +77,7 @@ export default function ReleaseNotes({ releases }: { releases: GitHubRelease[] }
   return (
     <div className="overflow-hidden">
       <div className="flex overflow-hidden gap-2.5 justify-center items-start w-full bg-white max-md:max-w-full">
-        <div className="flex justify-center items-start pt-5 max-w-[1260px] min-h-[1795px] min-w-60 w-[960px]">
+        <div className="flex justify-center items-start pt-5 max-w-[1260px] min-w-60 w-[960px]">
           <div className="px-2.5 pt-1.5 pb-16 min-w-60 w-[960px] max-md:max-w-full">
             {releaseNotes.length > 0 && releaseNotes.map(releaseNote => (
               <article key={releaseNote.sha} className="w-full mb-2.5">

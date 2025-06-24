@@ -12,9 +12,9 @@ import {
   extractContent
 } from '@/app/datasets/handleDatasets';
 
-async function fetchContent(slug: string) {
+async function fetchContent(slug: string, isDev: boolean) {
   const response = await fetch(
-    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets/${slug}.md`,
+    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets/${slug}.md${isDev ? '?ref=dev' : ''}`,
     {
       headers: {
         'Accept': 'application/vnd.github.v3.raw',
@@ -31,7 +31,7 @@ async function fetchContent(slug: string) {
   return content;
 }
 
-export default function DataAccessCards({ datasets }: { datasets: GitHubDataset[] }) {
+export default function DataAccessCards({ datasets, isDev }: { datasets: GitHubDataset[], isDev: boolean }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [processedDatasets, setProcessedDatasets] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,7 +45,7 @@ export default function DataAccessCards({ datasets }: { datasets: GitHubDataset[
             if (!slug) {
               return null;
             }
-            const fetchedContent = await fetchContent(slug);
+            const fetchedContent = await fetchContent(slug, isDev);
             const fetchedProcessedContent = await processMarkdown(fetchedContent);
             const titles = extractTitles(fetchedProcessedContent);
             const subtitles = extractSubtitles(fetchedProcessedContent);
