@@ -87,9 +87,11 @@ export default function Home() {
 
   useEffect(() => {
     const loadData = async () => {
+      console.log(window)
       if (typeof window !== 'undefined') {
         const tierName = window.location.hostname.split('.')[0].split('-')[1];
         const isDevEnv = (process.env.NODE_ENV === 'development') || (tierName === 'dev') || (tierName === 'qa');
+        console.log(tierName, isDevEnv)
         setIsDev(isDevEnv);
 
         try {

@@ -18,7 +18,14 @@ function rehypeCustomTheme() {
       if (node.tagName === 'a') {
         node.properties = node.properties || {};
         node.properties.className = ['text-[rgba(69,82,153,1)]', 'text-decoration-line: underline'];
-        node.properties.target = '_blank';
+        if (node.properties.href === 'dataset-updates') {
+          node.properties.id = node.properties.href;
+          node.properties.href = 'javascript:void(0);';
+          node.properties.className = ['text-[rgba(69,82,153,1)]', 'cursor-default'];
+          // node.properties.onclick = `console.log('here')`
+        } else {
+          node.properties.target = '_blank';
+        }
       }
       if (node.tagName === 'ul') {
         node.properties = node.properties || {};

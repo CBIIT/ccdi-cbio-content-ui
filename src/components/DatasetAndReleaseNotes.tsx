@@ -80,7 +80,7 @@ export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: G
         </div>
       </section>
       <section>
-        {activeTabId === tabs[0].id && <ReleaseNotes releases={releases} isDev={isDev} />}
+        {activeTabId === tabs[0].id && <ReleaseNotes releases={releases} isDev={isDev} handleTabClick={handleTabClick} />}
         {activeTabId === tabs[1].id && <Dataset datasets={datasets} isDev={isDev} />}
       </section>
     </>

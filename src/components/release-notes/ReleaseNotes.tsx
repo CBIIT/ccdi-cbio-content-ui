@@ -30,7 +30,11 @@ async function fetchContent(year: string, slug: string, isDev: boolean) {
   return content;
 }
 
-export default function ReleaseNotes({ releases, isDev }: { releases: GitHubRelease[], isDev: boolean }) {
+export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
+  releases: GitHubRelease[],
+  isDev: boolean,
+  handleTabClick: (tabId: string) => void
+}) {
   const flattenedReleasesWithReleaseNotes = releases.map(release => release.releaseNotes).flat();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [releaseNotes, setReleaseNotes] = useState<any[]>([]);
@@ -68,6 +72,18 @@ export default function ReleaseNotes({ releases, isDev }: { releases: GitHubRele
     };
 
     loadData();
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      const wrapper = document.querySelector('#dataset-updates');
+      console.log(wrapper)
+      // TODO: Doesn't work.
+      wrapper?.addEventListener('click', () => {
+        console.log('here')
+        handleTabClick('dataset-updates');
+      });
+    }, 2000);
   }, []);
 
   if (loading) {
