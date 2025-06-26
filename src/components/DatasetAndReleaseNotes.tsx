@@ -42,7 +42,7 @@ export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: G
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {
-      // @ts-ignore
+      // @ts-expect-error mainContentRef.current will be DOM.
       const height = mainContentRef.current?.scrollHeight;
       window.parent.postMessage(['setHeight', height], '*');
     });
