@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ReleaseNotesHeader } from './ReleaseNotesHeader';
 import { ReleaseNotesContent } from './ReleaseNotesContent';
 import { GitHubRelease } from '@/app/page';
@@ -40,6 +40,8 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
   const [releaseNotes, setReleaseNotes] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const mainContentRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -75,16 +77,21 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      const wrapper = document.querySelector('#dataset-updates');
-      console.log(wrapper)
-      // TODO: Doesn't work.
-      wrapper?.addEventListener('click', () => {
-        console.log('here')
-        handleTabClick('dataset-updates');
+    if (!loading) {
+      const observer = new ResizeObserver(() => {
+        const wrapper = mainContentRef.current?.querySelector('#dataset-updates');
+        wrapper?.addEventListener('click', () => {
+          handleTabClick('dataset-updates');
+        });
       });
-    }, 2000);
-  }, []);
+      if (mainContentRef.current) {
+        observer.observe(mainContentRef.current);
+      }
+      return () => {
+        observer.disconnect();
+      };
+    }
+  }, [loading]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -97,7 +104,7 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
           <div className="px-2.5 pt-1.5 pb-0 min-w-60 w-[960px] max-md:max-w-full">
             {releaseNotes.length > 0 && releaseNotes.map(releaseNote => (
               <article key={releaseNote.sha} className="w-full mb-2.5">
-                <div className="p-2 w-full bg-white rounded border border-solid border-neutral-300">
+                <div ref={mainContentRef} className="p-2 w-full bg-white rounded border border-solid border-neutral-300">
                   <ReleaseNotesHeader
                     version={releaseNote.titles[0].text}
                     date={releaseNote.dates[0].text}

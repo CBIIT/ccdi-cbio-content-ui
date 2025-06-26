@@ -21,8 +21,7 @@ function rehypeCustomTheme() {
         if (node.properties.href === 'dataset-updates') {
           node.properties.id = node.properties.href;
           node.properties.href = 'javascript:void(0);';
-          node.properties.className = ['text-[rgba(69,82,153,1)]', 'cursor-default'];
-          // node.properties.onclick = `console.log('here')`
+          node.properties.className = ['text-[rgba(69,82,153,1)]'];
         } else {
           node.properties.target = '_blank';
         }
