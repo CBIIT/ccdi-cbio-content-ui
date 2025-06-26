@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, FC, KeyboardEvent, useEffect } from 'react';
+import { useState, FC, KeyboardEvent, useEffect, useRef } from 'react';
 import { TabItem } from './TabItem';
 import ReleaseNotes from './release-notes/ReleaseNotes';
 import Dataset from './datasets/Dataset';
@@ -19,16 +19,11 @@ const tabs = [
 
 export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDataset[], isDev: boolean }> = ({ releases, datasets, isDev }) => {
   const [activeTabId, setActiveTabId] = useState(tabs[0].id);
-  const [contentHeight, setContentHeight] = useState<number | undefined>(0);
 
-  const handleContentHeight = () => {
-    setContentHeight(document.querySelector('#main-content')?.scrollHeight);
-    window.parent.postMessage(['setHeight', contentHeight], '*');
-  };
+  const mainContentRef = useRef(null);
 
   const handleTabClick = (tabId: string) => {
     setActiveTabId(tabId);
-    handleContentHeight();
   };
 
   const handleKeyDown = (event: KeyboardEvent, tabId: string) => {
@@ -46,15 +41,21 @@ export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: G
   };
 
   useEffect(() => {
-    setTimeout(() => {
-      const height = document.querySelector('#main-content')?.scrollHeight;
-      setContentHeight(height);
+    const observer = new ResizeObserver(() => {
+      // @ts-expect-error mainContentRef.current will be DOM.
+      const height = mainContentRef.current?.scrollHeight;
       window.parent.postMessage(['setHeight', height], '*');
-    }, 2000);
+    });
+    if (mainContentRef.current) {
+      observer.observe(mainContentRef.current);
+    }
+    return () => {
+      observer.disconnect();
+    };
   }, []);
   
   return (
-    <>
+    <div ref={mainContentRef}>
       <h1 className="sr-only">Dataset and Release Notes</h1>
       <section className="flex relative flex-col gap-1.5 items-center self-stretch bg-sky-50 border-b border-solid border-b-cyan-600 h-[88px] max-sm:h-auto">
         <div className="flex relative flex-col gap-1.5 justify-end items-start self-stretch max-w-[1260px] mx-30 max-sm:mx-5">
@@ -83,7 +84,7 @@ export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: G
         {activeTabId === tabs[0].id && <ReleaseNotes releases={releases} isDev={isDev} handleTabClick={handleTabClick} />}
         {activeTabId === tabs[1].id && <Dataset datasets={datasets} isDev={isDev} />}
       </section>
-    </>
+    </div>
   );
 };
 
