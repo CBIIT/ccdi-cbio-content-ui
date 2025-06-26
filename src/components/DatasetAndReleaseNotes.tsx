@@ -20,7 +20,7 @@ const tabs = [
 export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDataset[], isDev: boolean }> = ({ releases, datasets, isDev }) => {
   const [activeTabId, setActiveTabId] = useState(tabs[0].id);
 
-  const mainContentRef = useRef(null);
+  const mainContentRef = useRef<HTMLDivElement>(null);
 
   const handleTabClick = (tabId: string) => {
     setActiveTabId(tabId);
@@ -42,7 +42,6 @@ export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: G
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {
-      // @ts-expect-error mainContentRef.current will be DOM.
       const height = mainContentRef.current?.scrollHeight;
       window.parent.postMessage(['setHeight', height], '*');
     });
