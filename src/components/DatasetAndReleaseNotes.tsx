@@ -17,7 +17,7 @@ const tabs = [
   }
 ];
 
-export const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDataset[], isDev: boolean }> = ({ releases, datasets, isDev }) => {
+const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDataset[], isDev: boolean }> = ({ releases, datasets, isDev }) => {
   const [activeTabId, setActiveTabId] = useState(tabs[0].id);
 
   const mainContentRef = useRef<HTMLDivElement>(null);

@@ -9,7 +9,7 @@ import {
   extractTitles,
   extractDates,
   extractContent
-} from '@/app/release-notes/handleReleaseNotes';
+} from './handleReleaseNotes';
 
 async function fetchContent(year: string, slug: string, isDev: boolean) {
   const response = await fetch(
@@ -56,13 +56,13 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
             const fetchedProcessedContent = await processMarkdown(fetchedContent);
             const titles = extractTitles(fetchedProcessedContent);
             const dates = extractDates(fetchedProcessedContent);
-            const content = extractContent(fetchedProcessedContent)
+            const content = extractContent(fetchedProcessedContent);
             return {
               ...releaseNote,
               titles,
               dates,
               content
-            }
+            };
           })
         );
         setReleaseNotes(formattedReleaseNotes);

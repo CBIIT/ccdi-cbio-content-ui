@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { DatasetAndReleaseNotes } from '@/components/DatasetAndReleaseNotes';
+import DatasetAndReleaseNotes from '@/components/DatasetAndReleaseNotes';
 
 export interface GitHubRelease {
   name: string;

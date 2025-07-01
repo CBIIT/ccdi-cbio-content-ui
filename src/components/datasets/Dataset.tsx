@@ -10,7 +10,7 @@ import {
   extractSubtitles,
   extractDates,
   extractContent
-} from '@/app/datasets/handleDatasets';
+} from './handleDatasets';
 
 async function fetchContent(slug: string, isDev: boolean) {
   const response = await fetch(
@@ -50,14 +50,14 @@ export default function DataAccessCards({ datasets, isDev }: { datasets: GitHubD
             const titles = extractTitles(fetchedProcessedContent);
             const subtitles = extractSubtitles(fetchedProcessedContent);
             const dates = extractDates(fetchedProcessedContent);
-            const content = extractContent(fetchedProcessedContent)
+            const content = extractContent(fetchedProcessedContent);
             return {
               ...dataset,
               titles,
               subtitles,
               dates,
               content
-            }
+            };
           })
         );
         setProcessedDatasets(formattedDatasets);
