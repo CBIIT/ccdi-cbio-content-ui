@@ -17,7 +17,7 @@ function rehypeCustomTheme() {
       }
       if (node.tagName === 'a') {
         node.properties = node.properties || {};
-        node.properties.className = ['text-[rgba(69,82,153,1)]', 'text-decoration-line: underline'];
+        node.properties.className = ['text-[rgba(69,82,153,1)]', 'underline'];
         node.properties.target = '_blank';
       }
       if (node.tagName === 'ul') {
@@ -68,5 +68,8 @@ export function extractTitles(content: string): { id: string; text: string }[] {
 }
 
 export function extractContactContent(content: string): string {
-  return content.split('</h2>')[1];
+	if (!content.includes('</h2>')) {
+		return '';
+	}
+  return content.split('</h2>')[1] || '';
 }

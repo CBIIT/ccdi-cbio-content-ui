@@ -1,6 +1,7 @@
 'use client';
 
 import { FC, useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { AboutContent } from '@/components/about/AboutContent';
 import {
   processMarkdown,
@@ -10,10 +11,23 @@ import {
 } from '@/components/about/handleAbout';
 import headerImg from '../../../assets/CBioPortal_Header.png';
 
-export interface GitHubAbout {
+interface GitHubAbout {
   name: string;
   path: string;
   type: string;
+}
+
+interface ProcessedGitHubAbout {
+  titles: {
+    id: string;
+    text: string;
+  }[];
+  mainContent: string;
+  contactContent: string;
+  name: string;
+  path: string;
+  type: string;
+  sha?: string;
 }
 
 async function fetchAbouts(isDev: boolean) {
@@ -55,8 +69,7 @@ async function fetchContent(isDev: boolean) {
 }
 
 const About: FC = () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [processedAbouts, setProcessedAbouts] = useState<any[]>([]);
+  const [processedAbouts, setProcessedAbouts] = useState<ProcessedGitHubAbout[]>([]);
   const [loading, setLoading] = useState(true);
 
   const mainContentRef = useRef<HTMLDivElement>(null);
@@ -109,7 +122,7 @@ const About: FC = () => {
 
   return (
     <main ref={mainContentRef}>
-      <img src={headerImg.src} alt="About Page Image" />
+      <Image src={headerImg} alt="About Page Image" priority={true} />
       <div className="bg-[#087D6F] text-white py-3">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-[Poppins] font-bold">CCDI cBioPortal</h1>

@@ -17,7 +17,7 @@ function rehypeCustomTheme() {
       }
       if (node.tagName === 'a') {
         node.properties = node.properties || {};
-        node.properties.className = ['text-[rgba(69,82,153,1)]', 'text-decoration-line: underline'];
+        node.properties.className = ['text-[rgba(69,82,153,1)]', 'underline'];
         if (node.properties.href === 'dataset-updates') {
           node.properties.id = node.properties.href;
           node.properties.href = 'javascript:void(0);';
@@ -71,5 +71,8 @@ export function extractDates(content: string): { id: string; text: string }[] {
 }
 
 export function extractContent(content: string): string {
-  return content.split('</h3>')[1];
+  if (!content.includes('</h3>')) {
+		return '';
+	}
+  return content.split('</h3>')[1] || '';
 }

@@ -12,6 +12,26 @@ import {
   extractContent
 } from './handleDatasets';
 
+interface ProcessedGitHubDataset {
+  titles: {
+    id: string;
+    text: string;
+  }[];
+  subtitles: {
+    id: string;
+    text: string;
+  }[];
+  dates: {
+    id: string;
+    text: string;
+  }[];
+  content: string;
+  name: string;
+  path: string;
+  type: string;
+  sha?: string;
+}
+
 async function fetchContent(slug: string, isDev: boolean) {
   const response = await fetch(
     `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets/${slug}.md${isDev ? '?ref=dev' : ''}`,
@@ -32,8 +52,7 @@ async function fetchContent(slug: string, isDev: boolean) {
 }
 
 export default function DataAccessCards({ datasets, isDev }: { datasets: GitHubDataset[], isDev: boolean }) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [processedDatasets, setProcessedDatasets] = useState<any[]>([]);
+  const [processedDatasets, setProcessedDatasets] = useState<(ProcessedGitHubDataset | null)[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -83,15 +102,15 @@ export default function DataAccessCards({ datasets, isDev }: { datasets: GitHubD
             <div className="w-full">
               {processedDatasets.length > 0 && processedDatasets.map(processedDataset => (
                 <article
-                  key={processedDataset.sha}
+                  key={processedDataset?.sha}
                   className="overflow-hidden mb-2.5 p-2 w-full bg-white rounded border border-solid border-neutral-300"
                 >
                   <DatasetHeader
-                    title={processedDataset.titles[0].text}
-                    date={processedDataset.dates[0].text}
-                    subtitle={processedDataset.subtitles[0].text}
+                    title={processedDataset?.titles[0].text || ''}
+                    date={processedDataset?.dates[0].text || ''}
+                    subtitle={processedDataset?.subtitles[0].text || ''}
                   />
-                  <DatasetContent content={processedDataset.content} />
+                  <DatasetContent content={processedDataset?.content || ''} />
                 </article>
               ))}
             </div>
