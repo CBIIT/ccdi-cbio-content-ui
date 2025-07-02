@@ -8,6 +8,7 @@ import {
   extractMainContent,
   extractContactContent,
 } from '@/components/about/handleAbout';
+import headerImg from '../../../assets/CBioPortal_Header.png';
 
 export interface GitHubAbout {
   name: string;
@@ -107,16 +108,8 @@ const About: FC = () => {
 
   return (
     <main ref={mainContentRef}>
-      <div className="relative h-64 bg-gradient-to-r from-blue-100 via-green-50 to-orange-50 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-200/30 via-green-200/30 to-orange-200/30"></div>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-center text-gray-600">
-            <div className="text-6xl opacity-20 mb-2">🧬</div>
-            <p className="text-lg opacity-60">Advancing Childhood Cancer Research Through Data</p>
-          </div>
-        </div>
-      </div>
-      <div className="bg-teal-800 text-white py-3">
+      <img src={headerImg.src} alt="About Page Image" />
+      <div className="bg-[#087D6F] text-white py-3">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-bold">CCDI cBioPortal</h1>
         </div>
@@ -127,7 +120,7 @@ const About: FC = () => {
             {processedAbouts.length > 0 && processedAbouts.map(processedAbout => (
               <div key={processedAbout.sha}>
                 <AboutContent content={processedAbout.mainContent} />
-                <h2 className="text-xl font-bold text-teal-800 mt-15 mb-2 flex items-center">
+                <h2 className="text-xl font-bold text-[#19676D] mt-15 mb-2 flex items-center">
                   {processedAbout.titles[0].text}
                 </h2>
                 <AboutContent content={processedAbout.contactContent} />
