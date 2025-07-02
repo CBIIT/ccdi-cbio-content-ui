@@ -17,12 +17,16 @@ function rehypeCustomTheme() {
       }
       if (node.tagName === 'a') {
         node.properties = node.properties || {};
-        node.properties.className = ['text-[rgba(69,82,153,1)]', 'text-decoration-line: underline'];
+        node.properties.className = ['text-[rgba(69,82,153,1)]', 'underline'];
         node.properties.target = '_blank';
       }
-      if (node.tagName === 'ol') {
+      if (node.tagName === 'ul') {
         node.properties = node.properties || {};
-        node.properties.className = ['list-decimal', 'list-outside', 'px-5'];
+        node.properties.className = ['list-disc', 'list-outside', 'px-5', 'mt-8', 'mb-5'];
+      }
+			if (node.tagName === 'li') {
+        node.properties = node.properties || {};
+        node.properties.className = ['mx-10'];
       }
     });
   };
@@ -53,24 +57,19 @@ function extractElements(content: string, regex: RegExp): { id: string; text: st
   return elements;
 }
 
+export function extractMainContent(content: string): string {
+  return content.split('<h2')[0];
+}
+
 export function extractTitles(content: string): { id: string; text: string }[] {
   const regex = /<h2 id="([^"]+)"[^>]*>([^<]+)<\/h2>/g;
 
   return extractElements(content, regex);
 }
 
-export function extractSubtitles(content: string): { id: string; text: string }[] {
-  const regex = /<h3 id="([^"]+)"[^>]*>([^<]+)<\/h3>/g;
-
-  return extractElements(content, regex);
-}
-
-export function extractDates(content: string): { id: string; text: string }[] {
-  const regex = /<h4 id="([^"]+)"[^>]*>([^<]+)<\/h4>/g;
-
-  return extractElements(content, regex);
-}
-
-export function extractContent(content: string): string {
-  return content.split('</h4>')[1];
+export function extractContactContent(content: string): string {
+	if (!content.includes('</h2>')) {
+		return '';
+	}
+  return content.split('</h2>')[1] || '';
 }

@@ -9,7 +9,23 @@ import {
   extractTitles,
   extractDates,
   extractContent
-} from '@/app/release-notes/handleReleaseNotes';
+} from './handleReleaseNotes';
+
+interface ProcessedGitHubReleaseNotes {
+  titles: {
+    id: string;
+    text: string;
+  }[];
+  dates: {
+    id: string;
+    text: string;
+  }[];
+  content: string;
+  name: string;
+  path: string;
+  type: string;
+  sha?: string;
+}
 
 async function fetchContent(year: string, slug: string, isDev: boolean) {
   const response = await fetch(
@@ -36,8 +52,7 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
   handleTabClick: (tabId: string) => void
 }) {
   const flattenedReleasesWithReleaseNotes = releases.map(release => release.releaseNotes).flat();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [releaseNotes, setReleaseNotes] = useState<any[]>([]);
+  const [releaseNotes, setReleaseNotes] = useState<(ProcessedGitHubReleaseNotes | null)[]>([]);
   const [loading, setLoading] = useState(true);
 
   const mainContentRef = useRef<HTMLDivElement>(null);
@@ -56,13 +71,13 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
             const fetchedProcessedContent = await processMarkdown(fetchedContent);
             const titles = extractTitles(fetchedProcessedContent);
             const dates = extractDates(fetchedProcessedContent);
-            const content = extractContent(fetchedProcessedContent)
+            const content = extractContent(fetchedProcessedContent);
             return {
               ...releaseNote,
               titles,
               dates,
               content
-            }
+            };
           })
         );
         setReleaseNotes(formattedReleaseNotes);
@@ -103,13 +118,13 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
         <div className="flex justify-center items-start pt-5 max-w-[1260px] min-w-60 w-[960px]">
           <div className="px-2.5 pt-1.5 pb-0 min-w-60 w-[960px] max-md:max-w-full">
             {releaseNotes.length > 0 && releaseNotes.map(releaseNote => (
-              <article key={releaseNote.sha} className="w-full mb-2.5">
+              <article key={releaseNote?.sha} className="w-full mb-2.5">
                 <div ref={mainContentRef} className="p-2 w-full bg-white rounded border border-solid border-neutral-300">
                   <ReleaseNotesHeader
-                    version={releaseNote.titles[0].text}
-                    date={releaseNote.dates[0].text}
+                    version={releaseNote?.titles[0].text || ''}
+                    date={releaseNote?.dates[0].text || ''}
                   />
-                  <ReleaseNotesContent content={releaseNote.content} />
+                  <ReleaseNotesContent content={releaseNote?.content || ''} />
                 </div>
               </article>
             ))}

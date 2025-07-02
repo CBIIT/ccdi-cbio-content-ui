@@ -17,17 +17,12 @@ function rehypeCustomTheme() {
       }
       if (node.tagName === 'a') {
         node.properties = node.properties || {};
-        node.properties.className = ['text-[rgba(69,82,153,1)]', 'text-decoration-line: underline'];
-        if (node.properties.href === 'dataset-updates') {
-          node.properties.id = node.properties.href;
-          node.properties.href = 'javascript:void(0);';
-        } else {
-          node.properties.target = '_blank';
-        }
+        node.properties.className = ['text-[rgba(69,82,153,1)]', 'underline'];
+        node.properties.target = '_blank';
       }
-      if (node.tagName === 'ul') {
+      if (node.tagName === 'ol') {
         node.properties = node.properties || {};
-        node.properties.className = ['list-disc', 'list-outside', 'px-5'];
+        node.properties.className = ['list-decimal', 'list-outside', 'px-5'];
       }
     });
   };
@@ -64,12 +59,21 @@ export function extractTitles(content: string): { id: string; text: string }[] {
   return extractElements(content, regex);
 }
 
-export function extractDates(content: string): { id: string; text: string }[] {
+export function extractSubtitles(content: string): { id: string; text: string }[] {
   const regex = /<h3 id="([^"]+)"[^>]*>([^<]+)<\/h3>/g;
 
   return extractElements(content, regex);
 }
 
+export function extractDates(content: string): { id: string; text: string }[] {
+  const regex = /<h4 id="([^"]+)"[^>]*>([^<]+)<\/h4>/g;
+
+  return extractElements(content, regex);
+}
+
 export function extractContent(content: string): string {
-  return content.split('</h3>')[1];
+  if (!content.includes('</h4>')) {
+		return '';
+	}
+  return content.split('</h4>')[1] || '';
 }
