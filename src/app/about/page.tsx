@@ -111,7 +111,7 @@ const About: FC = () => {
       <img src={headerImg.src} alt="About Page Image" />
       <div className="bg-[#087D6F] text-white py-3">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold">CCDI cBioPortal</h1>
+          <h1 className="text-3xl font-[Poppins] font-bold">CCDI cBioPortal</h1>
         </div>
       </div>
       <section id="about" className="pt-16 pb-1 bg-white">
@@ -120,7 +120,7 @@ const About: FC = () => {
             {processedAbouts.length > 0 && processedAbouts.map(processedAbout => (
               <div key={processedAbout.sha}>
                 <AboutContent content={processedAbout.mainContent} />
-                <h2 className="text-xl font-bold text-[#19676D] mt-15 mb-2 flex items-center">
+                <h2 className="text-xl font-[Poppins] font-bold text-[#19676D] mt-15 mb-2 flex items-center">
                   {processedAbout.titles[0].text}
                 </h2>
                 <AboutContent content={processedAbout.contactContent} />
