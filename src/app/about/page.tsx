@@ -55,6 +55,7 @@ async function fetchContent(isDev: boolean) {
 }
 
 const About: FC = () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [processedAbouts, setProcessedAbouts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
