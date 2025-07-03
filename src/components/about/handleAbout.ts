@@ -22,7 +22,7 @@ function rehypeCustomTheme() {
       }
       if (node.tagName === 'ul') {
         node.properties = node.properties || {};
-        node.properties.className = ['list-disc', 'list-outside', 'px-5', 'mt-8', 'mb-5'];
+        node.properties.className = ['list-disc', 'list-outside', 'px-5', 'mb-5'];
       }
 			if (node.tagName === 'li') {
         node.properties = node.properties || {};
