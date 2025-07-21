@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     }
 
     const aboutsData = await aboutsResponse.json();
-    const aboutFiles = aboutsData.filter((item: any) => item.type === 'file' && item.name.endsWith('.md'));
+    const aboutFiles = aboutsData.filter((item: { type: string; name: string }) => item.type === 'file' && item.name.endsWith('.md'));
 
     // Fetch content
     const contentResponse = await fetch(

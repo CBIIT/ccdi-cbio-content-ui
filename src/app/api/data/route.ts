@@ -22,11 +22,11 @@ export async function GET(request: NextRequest) {
     }
 
     const releasesData = await releasesResponse.json();
-    const releases = releasesData.filter((item: any) => item.type === 'dir');
+    const releases = releasesData.filter((item: { type: string }) => item.type === 'dir');
 
     // Fetch release notes for each release
     const releasesWithReleaseNotes = await Promise.all(
-      releases.map(async (release: any) => {
+      releases.map(async (release: { name: string }) => {
         const year = release.name;
         const releaseNotesResponse = await fetch(
           `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}${isDev ? '?ref=dev' : ''}`,
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
         }
 
         const releaseNotesData = await releaseNotesResponse.json();
-        const releaseNotes = releaseNotesData.filter((item: any) => item.type === 'file' && item.name.endsWith('.md'));
+        const releaseNotes = releaseNotesData.filter((item: { type: string; name: string }) => item.type === 'file' && item.name.endsWith('.md'));
 
         return {
           ...release,
@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
     }
 
     const datasetsData = await datasetsResponse.json();
-    const datasets = datasetsData.filter((item: any) => item.type === 'file' && item.name.endsWith('.md'));
+    const datasets = datasetsData.filter((item: { type: string; name: string }) => item.type === 'file' && item.name.endsWith('.md'));
 
     return NextResponse.json({
       releases: releasesWithReleaseNotes,
