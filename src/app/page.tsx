@@ -22,61 +22,15 @@ export interface GitHubDataset {
   type: string;
 }
 
-async function fetchReleases(isDev: boolean) {
-  const response = await fetch(
-    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases${isDev ? '?ref=dev' : ''}`,
-    {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-      },
-      next: { revalidate: 3600 }
-    }
-  );
+async function fetchData(isDev: boolean) {
+  const response = await fetch(`/api/data?dev=${isDev}`);
 
   if (!response.ok) {
-    throw new Error('Failed to fetch releases');
+    throw new Error('Failed to fetch data');
   }
 
-  const data: GitHubRelease[] = await response.json();
-  return data.filter(item => item.type === 'dir');
-}
-
-async function fetchReleaseNotes(year: string, isDev: boolean) {
-  const response = await fetch(
-    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}${isDev ? '?ref=dev' : ''}`,
-    {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-      },
-      next: { revalidate: 3600 }
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch release notes for Year ${year}`);
-  }
-
-  const data: GitHubReleaseNote[] = await response.json();
-  return data.filter(item => item.type === 'file' && item.name.endsWith('.md'));
-}
-
-async function fetchDatasets(isDev: boolean) {
-  const response = await fetch(
-    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets${isDev ? '?ref=dev' : ''}`,
-    {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-      },
-      next: { revalidate: 3600 }
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch datasets');
-  }
-
-  const data: GitHubDataset[] = await response.json();
-  return data.filter(item => item.type === 'file' && item.name.endsWith('.md'));
+  const data = await response.json();
+  return data;
 }
 
 export default function Home() {
@@ -87,22 +41,14 @@ export default function Home() {
 
   useEffect(() => {
     const loadData = async () => {
-      console.log(window)
       if (typeof window !== 'undefined') {
         const isDevEnv = (process.env.NODE_ENV === 'development') || !!window.location.search;
         setIsDev(isDevEnv);
 
         try {
-          const fetchedReleases = (await fetchReleases(isDevEnv)).reverse();
-          const releasesWithReleaseNotes = await Promise.all(
-            fetchedReleases.map(async (release) => ({
-              ...release,
-              releaseNotes: (await fetchReleaseNotes(release.name, isDevEnv)).reverse(),
-            }))
-          );
-          const fetchedDatasets = await fetchDatasets(isDevEnv);
-          setReleases(releasesWithReleaseNotes);
-          setDatasets(fetchedDatasets);
+          const { releases, datasets } = await fetchData(isDevEnv);
+          setReleases(releases.reverse());
+          setDatasets(datasets);
         } catch (error) {
           console.error(error);
         } finally {
