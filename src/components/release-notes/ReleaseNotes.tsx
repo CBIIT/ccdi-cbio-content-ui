@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
+import { fetchReleaseNoteContent } from '@/utilities/data-fetching';
 import { ReleaseNotesHeader } from './ReleaseNotesHeader';
 import { ReleaseNotesContent } from './ReleaseNotesContent';
 import { GitHubRelease } from '@/app/page';
@@ -27,19 +28,6 @@ interface ProcessedGitHubReleaseNotes {
   sha?: string;
 }
 
-async function fetchContent(year: string, slug: string, isDev: boolean) {
-  const response = await fetch(
-    `/api/release-notes?year=${year}&slug=${slug}&dev=${isDev}`
-  );
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch release note content');
-  }
-
-  const data = await response.json();
-  return data.content;
-}
-
 export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
   releases: GitHubRelease[],
   isDev: boolean,
@@ -61,7 +49,7 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
             if (!year || !slug) {
               return null;
             }
-            const fetchedContent = await fetchContent(year, slug, isDev);
+            const fetchedContent = await fetchReleaseNoteContent(year, slug, isDev);
             const fetchedProcessedContent = await processMarkdown(fetchedContent);
             const titles = extractTitles(fetchedProcessedContent);
             const dates = extractDates(fetchedProcessedContent);
