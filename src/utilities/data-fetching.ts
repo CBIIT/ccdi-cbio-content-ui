@@ -1,9 +1,13 @@
-async function fetchGitHubData(isDev: boolean = false) {
+function getValidatedToken() {
   const token = process.env.NEXT_PUBLIC_CONTENT_API_TOKEN;
-  
   if (!token) {
     throw new Error('NEXT_PUBLIC_CONTENT_API_TOKEN is not configured');
   }
+  return token;
+}
+
+async function fetchGitHubData(isDev: boolean = false) {
+  const token = getValidatedToken();
 
   try {
     // Fetch releases
@@ -84,11 +88,7 @@ async function fetchGitHubData(isDev: boolean = false) {
 }
 
 async function fetchAboutData(isDev: boolean = false) {
-  const token = process.env.NEXT_PUBLIC_CONTENT_API_TOKEN;
-  
-  if (!token) {
-    throw new Error('NEXT_PUBLIC_CONTENT_API_TOKEN is not configured');
-  }
+  const token = getValidatedToken();
 
   try {
     const response = await fetch(
@@ -137,11 +137,7 @@ async function fetchAboutData(isDev: boolean = false) {
 }
 
 async function fetchReleaseNoteContent(year: string, slug: string, isDev: boolean = false) {
-  const token = process.env.NEXT_PUBLIC_CONTENT_API_TOKEN;
-  
-  if (!token) {
-    throw new Error('NEXT_PUBLIC_CONTENT_API_TOKEN is not configured');
-  }
+  const token = getValidatedToken();
 
   try {
     const response = await fetch(
@@ -168,11 +164,7 @@ async function fetchReleaseNoteContent(year: string, slug: string, isDev: boolea
 }
 
 async function fetchDatasetContent(slug: string, isDev: boolean = false) {
-  const token = process.env.NEXT_PUBLIC_CONTENT_API_TOKEN;
-  
-  if (!token) {
-    throw new Error('NEXT_PUBLIC_CONTENT_API_TOKEN is not configured');
-  }
+  const token = getValidatedToken();
 
   try {
     const response = await fetch(
