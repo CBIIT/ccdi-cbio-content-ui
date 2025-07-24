@@ -148,7 +148,7 @@ async function fetchReleaseNoteContent(year: string, slug: string, isDev: boolea
       `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}/${slug}.md${isDev ? '?ref=dev' : ''}`,
       {
         headers: {
-          'Accept': 'application/vnd.github.v3+json',
+          'Accept': 'application/vnd.github.v3.raw',
           'Authorization': `Bearer ${token}`
         },
         next: { revalidate: 3600 }
@@ -159,8 +159,8 @@ async function fetchReleaseNoteContent(year: string, slug: string, isDev: boolea
       throw new Error('Failed to fetch release note content');
     }
 
-    const data = await response.json();
-    return Buffer.from(data.content, 'base64').toString('utf-8');
+    const content = await response.text();
+    return content;
   } catch (error) {
     console.error('Error fetching release note content:', error);
     throw error;
@@ -179,7 +179,7 @@ async function fetchDatasetContent(slug: string, isDev: boolean = false) {
       `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets/${slug}.md${isDev ? '?ref=dev' : ''}`,
       {
         headers: {
-          'Accept': 'application/vnd.github.v3+json',
+          'Accept': 'application/vnd.github.v3.raw',
           'Authorization': `Bearer ${token}`
         },
         next: { revalidate: 3600 }
@@ -190,8 +190,8 @@ async function fetchDatasetContent(slug: string, isDev: boolean = false) {
       throw new Error('Failed to fetch dataset content');
     }
 
-    const data = await response.json();
-    return Buffer.from(data.content, 'base64').toString('utf-8');
+    const content = await response.text();
+    return content;
   } catch (error) {
     console.error('Error fetching dataset content:', error);
     throw error;
