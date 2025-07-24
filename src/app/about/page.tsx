@@ -30,42 +30,15 @@ interface ProcessedGitHubAbout {
   sha?: string;
 }
 
-async function fetchAbouts(isDev: boolean) {
-  const response = await fetch(
-    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/about${isDev ? '?ref=dev' : ''}`,
-    {
-      headers: {
-        'Accept': 'application/vnd.github.v3+json',
-      },
-      next: { revalidate: 3600 }
-    }
-  );
+async function fetchAboutData(isDev: boolean) {
+  const response = await fetch(`/api/about?dev=${isDev}`);
 
   if (!response.ok) {
-    throw new Error('Failed to fetch about');
+    throw new Error('Failed to fetch about data');
   }
 
-  const data: GitHubAbout[] = await response.json();
-  return data.filter(item => item.type === 'file' && item.name.endsWith('.md'));
-}
-
-async function fetchContent(isDev: boolean) {
-  const response = await fetch(
-    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/about/about.md${isDev ? '?ref=dev' : ''}`,
-    {
-      headers: {
-        'Accept': 'application/vnd.github.v3.raw',
-      },
-      next: { revalidate: 3600 }
-    }
-  );
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch about');
-  }
-
-  const content = await response.text();
-  return content;
+  const data = await response.json();
+  return data;
 }
 
 const About: FC = () => {
@@ -80,11 +53,10 @@ const About: FC = () => {
         const isDevEnv = (process.env.NODE_ENV === 'development') || !!window.location.search;
 
         try {
-          const fetchedAbouts = await fetchAbouts(isDevEnv);
+          const { aboutFiles, content } = await fetchAboutData(isDevEnv);
           const formattedAbouts = await Promise.all(
-            fetchedAbouts.map(async fetchedAbout => {
-              const fetchedContent = await fetchContent(isDevEnv);
-              const fetchedProcessedContent = await processMarkdown(fetchedContent);
+            aboutFiles.map(async (fetchedAbout: GitHubAbout) => {
+              const fetchedProcessedContent = await processMarkdown(content);
               const titles = extractTitles(fetchedProcessedContent);
               const mainContent = extractMainContent(fetchedProcessedContent);
               const contactContent = extractContactContent(fetchedProcessedContent);
@@ -122,7 +94,7 @@ const About: FC = () => {
 
   return (
     <main ref={mainContentRef}>
-      <Image src={headerImg} alt="About Page Image" priority={true} />
+      <Image src={headerImg} alt="About Page" priority={true} />
       <div className="bg-[#087D6F] text-white py-3">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-3xl font-[Poppins] font-bold">CCDI cBioPortal</h1>

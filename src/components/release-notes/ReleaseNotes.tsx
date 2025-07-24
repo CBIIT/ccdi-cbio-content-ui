@@ -29,21 +29,15 @@ interface ProcessedGitHubReleaseNotes {
 
 async function fetchContent(year: string, slug: string, isDev: boolean) {
   const response = await fetch(
-    `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}/${slug}.md${isDev ? '?ref=dev' : ''}`,
-    {
-      headers: {
-        'Accept': 'application/vnd.github.v3.raw',
-      },
-      next: { revalidate: 3600 }
-    }
+    `/api/release-notes?year=${year}&slug=${slug}&dev=${isDev}`
   );
 
   if (!response.ok) {
-    throw new Error('Failed to fetch releases');
+    throw new Error('Failed to fetch release note content');
   }
 
-  const content = await response.text();
-  return content;
+  const data = await response.json();
+  return data.content;
 }
 
 export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
@@ -106,7 +100,7 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
         observer.disconnect();
       };
     }
-  }, [loading]);
+  });
 
   if (loading) {
     return <div>Loading...</div>;
