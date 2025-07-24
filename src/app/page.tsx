@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { fetchGitHubData } from '@/utilities/data-fetching';
 import DatasetAndReleaseNotes from '@/components/DatasetAndReleaseNotes';
 
 export interface GitHubRelease {
@@ -22,17 +23,6 @@ export interface GitHubDataset {
   type: string;
 }
 
-async function fetchData(isDev: boolean) {
-  const response = await fetch(`/api/data?dev=${isDev}`);
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch data');
-  }
-
-  const data = await response.json();
-  return data;
-}
-
 export default function Home() {
   const [releases, setReleases] = useState<GitHubRelease[]>([]);
   const [datasets, setDatasets] = useState<GitHubDataset[]>([]);
@@ -46,7 +36,7 @@ export default function Home() {
         setIsDev(isDevEnv);
 
         try {
-          const { releases, datasets } = await fetchData(isDevEnv);
+          const { releases, datasets } = await fetchGitHubData(isDevEnv);
           setReleases(releases.reverse());
           setDatasets(datasets);
         } catch (error) {

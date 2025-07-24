@@ -1,6 +1,7 @@
 'use client';
 
 import { FC, useState, useEffect, useRef } from 'react';
+import { fetchAboutData } from '@/utilities/data-fetching';
 import Image from 'next/image';
 import { AboutContent } from '@/components/about/AboutContent';
 import {
@@ -28,17 +29,6 @@ interface ProcessedGitHubAbout {
   path: string;
   type: string;
   sha?: string;
-}
-
-async function fetchAboutData(isDev: boolean) {
-  const response = await fetch(`/api/about?dev=${isDev}`);
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch about data');
-  }
-
-  const data = await response.json();
-  return data;
 }
 
 const About: FC = () => {

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { fetchDatasetContent } from '@/utilities/data-fetching';
 import { DatasetHeader } from './DatasetHeader';
 import { DatasetContent } from './DatasetContent';
 import { GitHubDataset } from '@/app/page';
@@ -32,19 +33,6 @@ interface ProcessedGitHubDataset {
   sha?: string;
 }
 
-async function fetchContent(slug: string, isDev: boolean) {
-  const response = await fetch(
-    `/api/datasets?slug=${slug}&dev=${isDev}`
-  );
-
-  if (!response.ok) {
-    throw new Error('Failed to fetch dataset content');
-  }
-
-  const data = await response.json();
-  return data.content;
-}
-
 export default function DataAccessCards({ datasets, isDev }: { datasets: GitHubDataset[], isDev: boolean }) {
   const [processedDatasets, setProcessedDatasets] = useState<(ProcessedGitHubDataset | null)[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,7 +46,7 @@ export default function DataAccessCards({ datasets, isDev }: { datasets: GitHubD
             if (!slug) {
               return null;
             }
-            const fetchedContent = await fetchContent(slug, isDev);
+            const fetchedContent = await fetchDatasetContent(slug, isDev);
             const fetchedProcessedContent = await processMarkdown(fetchedContent);
             const titles = extractTitles(fetchedProcessedContent);
             const subtitles = extractSubtitles(fetchedProcessedContent);
