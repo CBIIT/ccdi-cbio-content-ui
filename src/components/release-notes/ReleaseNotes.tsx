@@ -101,7 +101,7 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
           <div className="px-2.5 pt-1.5 pb-0 min-w-60 w-[960px] max-md:max-w-full">
             {releaseNotes.length > 0 && releaseNotes.map(releaseNote => (
               <article key={releaseNote?.sha} className="w-full mb-2.5">
-                <div ref={mainContentRef} className="p-2 w-full bg-white rounded border border-solid border-neutral-500">
+                <div ref={mainContentRef} className="p-2 w-full bg-white rounded border border-solid border-neutral-300">
                   <ReleaseNotesHeader
                     version={releaseNote?.titles[0].text || ''}
                     date={releaseNote?.dates[0].text || ''}
