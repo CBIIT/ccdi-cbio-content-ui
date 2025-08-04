@@ -87,7 +87,7 @@ const About: FC = () => {
       <Image src={headerImg} alt="About Page" priority={true} />
       <div className="bg-[#087D6F] text-white py-3">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-[Poppins] font-bold">CCDI cBioPortal</h1>
+          <h1 className="text-4xl font-[Poppins] font-bold">CCDI cBioPortal</h1>
         </div>
       </div>
       <section id="about" className="pt-16 pb-1 bg-white">
