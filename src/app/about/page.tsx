@@ -10,7 +10,9 @@ import {
   extractMainContent,
   extractContactContent,
 } from '@/components/about/handleAbout';
-import headerImg from '../../../assets/CBioPortal_Header.png';
+import headerImg from '../../../assets/about/cBio_About_Header.svg';
+import headerImgMobile from '../../../assets/about/cBio_About_Header_mobile.svg';
+import headerImgTablet from '../../../assets/about/cBio_About_Header_tablet.svg';
 
 interface GitHubAbout {
   name: string;
@@ -84,22 +86,50 @@ const About: FC = () => {
 
   return (
     <main ref={mainContentRef}>
-      <Image src={headerImg} alt="About Page" priority={true} />
-      <div className="bg-[#087D6F] text-white py-3">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-[Poppins] font-bold">CCDI cBioPortal</h1>
+      <div className="about-header-image">
+        {/* Mobile (<640px) */}
+        <Image
+          src={headerImgMobile}
+          alt="About Page Mobile Header"
+          priority
+          className="block sm:hidden w-full object-cover"
+        />
+        {/* Tablet (>=640px and <1024px) */}
+        <Image
+          src={headerImgTablet}
+          alt="About Page Tablet Header"
+          className="hidden sm:block lg:hidden w-full object-cover"
+        />
+        {/* Desktop (>=1024px) */}
+        <Image
+          src={headerImg}
+          alt="About Page Desktop Header"
+          className="hidden lg:block w-full object-cover"
+        />
+      </div>
+      <div className="bg-[#087D6F] text-white py-2">
+        <div className="container lg:mx-auto px-4 sm:px-6 lg:px-8">
+          <h1
+            className="text-[35px] font-[Poppins] font-semibold line-height-[38px] letter-spacing-[0.7px]"
+          >
+            CCDI cBioPortal
+          </h1>
         </div>
       </div>
-      <section id="about" className="pt-16 pb-1 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl">
+      <section id="about" className="pt-10 pb-1 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
           <div className="prose prose-lg max-w-none">
             {processedAbouts.length > 0 && processedAbouts.map(processedAbout => (
               <div key={processedAbout.sha}>
                 <AboutContent content={processedAbout.mainContent} />
-                <h2 className="text-xl font-[Poppins] font-bold text-[#19676D] mt-15 mb-2 flex items-center">
+                <h2
+                  className="text-[22px] font-[Poppins] font-normal line-height-[26px] letter-spacing-[-0.044px] text-[#05555C] mt-15 mb-2 flex items-center uppercase"
+                >
                   {processedAbout.titles[0].text}
                 </h2>
-                <AboutContent content={processedAbout.contactContent} />
+                <div className="contact-section">
+                  <AboutContent content={processedAbout.contactContent} />
+                </div>
               </div>
             ))}
           </div>

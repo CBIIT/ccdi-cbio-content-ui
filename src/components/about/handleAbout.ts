@@ -13,20 +13,20 @@ function rehypeCustomTheme() {
     visit(tree, 'element', (node) => {
       if (node.tagName === 'p') {
         node.properties = node.properties || {};
-        node.properties.className = ['mb-3', 'max-md:max-w-full'];
+        node.properties.className = ['text-[16px]', 'font-[Inter]', 'font-medium', 'line-height-[22px]', 'mb-3', 'max-md:max-w-full'];
       }
       if (node.tagName === 'a') {
         node.properties = node.properties || {};
-        node.properties.className = ['text-[rgba(69,82,153,1)]', 'underline'];
+        node.properties.className = ['text-[16px]', 'font-[Inter]', 'font-semibold', 'line-height-[22px]','text-[rgba(69,82,153,1)]', 'underline'];
         node.properties.target = '_blank';
       }
       if (node.tagName === 'ul') {
         node.properties = node.properties || {};
-        node.properties.className = ['list-disc', 'list-outside', 'px-5', 'mb-5'];
+        node.properties.className = ['list-disc', 'list-outside', 'px-5', 'my-8'];
       }
 			if (node.tagName === 'li') {
         node.properties = node.properties || {};
-        node.properties.className = ['mx-10'];
+        node.properties.className = ['text-[16px]', 'font-[Inter]', 'font-medium', 'line-height-[22px]', 'ml-1'];
       }
     });
   };

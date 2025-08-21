@@ -32,3 +32,25 @@ body {
   color: var(--foreground);
   font-family: var(--font-open-sans), Arial, Helvetica, sans-serif;
 }
+
+.about-header-image img {
+  height: 214px;
+}
+
+/* Contact section responsive adjustments */
+.contact-section a {
+  word-break: break-all; /* ensure long emails/urls wrap */
+}
+
+@media (max-width: 1024px) {
+  p, a, li {
+    font-size: 18px !important; /* override inline utility */
+    line-height: 24px;
+  }
+
+  h2.uppercase {
+    font-size: 25px !important; /* override inline utility */
+    letter-spacing: -0.05px;
+    line-height: 26px;
+  }
+}
