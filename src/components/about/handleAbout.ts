@@ -13,11 +13,11 @@ function rehypeCustomTheme() {
     visit(tree, 'element', (node) => {
       if (node.tagName === 'p') {
         node.properties = node.properties || {};
-        node.properties.className = ['text-[16px]', 'font-[Inter]', 'font-medium', 'line-height-[22px]', 'mb-3', 'max-md:max-w-full'];
+        node.properties.className = ['text-[16px]', 'font-[Inter]', 'font-medium', 'leading-[22px]', 'mb-3', 'max-md:max-w-full'];
       }
       if (node.tagName === 'a') {
         node.properties = node.properties || {};
-        node.properties.className = ['text-[16px]', 'font-[Inter]', 'font-semibold', 'line-height-[22px]','text-[rgba(69,82,153,1)]', 'underline'];
+        node.properties.className = ['text-[16px]', 'font-[Inter]', 'font-semibold', 'leading-[22px]', 'text-[rgba(69,82,153,1)]', 'underline'];
         node.properties.target = '_blank';
       }
       if (node.tagName === 'ul') {
@@ -26,7 +26,7 @@ function rehypeCustomTheme() {
       }
 			if (node.tagName === 'li') {
         node.properties = node.properties || {};
-        node.properties.className = ['text-[16px]', 'font-[Inter]', 'font-medium', 'line-height-[22px]', 'ml-1'];
+        node.properties.className = ['text-[16px]', 'font-[Inter]', 'font-medium', 'leading-[22px]', 'ml-1'];
       }
     });
   };

@@ -107,10 +107,10 @@ const About: FC = () => {
           className="hidden lg:block w-full object-cover"
         />
       </div>
-      <div className="bg-[#087D6F] text-white py-2">
+      <div className="bg-[#087D6F] text-white py-3">
         <div className="container lg:mx-auto px-4 sm:px-6 lg:px-8">
           <h1
-            className="text-[35px] font-[Poppins] font-semibold line-height-[38px] letter-spacing-[0.7px]"
+            className="text-[35px] font-[Poppins] font-semibold leading-[38px] tracking-[0.7px]"
           >
             CCDI cBioPortal
           </h1>
@@ -123,7 +123,7 @@ const About: FC = () => {
               <div key={processedAbout.sha}>
                 <AboutContent content={processedAbout.mainContent} />
                 <h2
-                  className="text-[22px] font-[Poppins] font-normal line-height-[26px] letter-spacing-[-0.044px] text-[#05555C] mt-15 mb-2 flex items-center uppercase"
+                  className="text-[22px] font-[Poppins] font-normal leading-[26px] tracking-[-0.044px] text-[#05555C] mt-15 mb-2 flex items-center uppercase"
                 >
                   {processedAbout.titles[0].text}
                 </h2>
