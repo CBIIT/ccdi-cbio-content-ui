@@ -38,18 +38,18 @@ body {
 }
 
 /* Contact section responsive adjustments */
-.contact-section a {
-  word-break: break-all; /* ensure long emails/urls wrap */
+#about .contact-section a {
+  overflow-wrap: break-word; /* ensure long emails/urls wrap */
 }
 
 @media (max-width: 1024px) {
-  p, a, li {
-    font-size: 18px !important; /* override inline utility */
+  #about p, #about a, #about li {
+    font-size: 18px; /* override inline utility */
     line-height: 24px;
   }
 
-  h2.uppercase {
-    font-size: 25px !important; /* override inline utility */
+  #about h2.uppercase {
+    font-size: 25px; /* override inline utility */
     letter-spacing: -0.05px;
     line-height: 26px;
   }
