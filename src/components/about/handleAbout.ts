@@ -37,8 +37,12 @@ function rehypeCustomTheme() {
         node.properties.target = '_blank';
       }
       if (node.tagName === 'ul') {
+        const LIST_CLASSES = [
+          'list-disc', 'list-outside',
+          'px-5', 'my-8'
+        ];
         node.properties = node.properties || {};
-        node.properties.className = ['list-disc', 'list-outside', 'px-5', 'my-8'];
+        node.properties.className = LIST_CLASSES;
       }
 			if (node.tagName === 'li') {
         const LIST_ITEM_CLASSES = [
