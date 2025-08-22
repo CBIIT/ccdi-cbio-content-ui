@@ -12,21 +12,48 @@ function rehypeCustomTheme() {
   return (tree: any) => {
     visit(tree, 'element', (node) => {
       if (node.tagName === 'p') {
+        const PARAGRAPH_CLASSES = [
+          'text-[18px]', 'lg:text-[16px]',
+          'font-[Inter]',
+          'font-medium',
+          'leading-[24px]', 'lg:leading-[22px]',
+          'mb-3',
+          'max-md:max-w-full'
+        ];
         node.properties = node.properties || {};
-        node.properties.className = ['mb-3', 'max-md:max-w-full'];
+        node.properties.className = PARAGRAPH_CLASSES;
       }
       if (node.tagName === 'a') {
+        const LINK_CLASSES = [
+          'text-[18px]', 'lg:text-[16px]',
+          'font-[Inter]',
+          'font-semibold',
+          'leading-[24px]', 'lg:leading-[22px]',
+          'text-[rgba(69,82,153,1)]',
+          'underline'
+        ];
         node.properties = node.properties || {};
-        node.properties.className = ['text-[rgba(69,82,153,1)]', 'underline'];
+        node.properties.className = LINK_CLASSES;
         node.properties.target = '_blank';
       }
       if (node.tagName === 'ul') {
+        const LIST_CLASSES = [
+          'list-disc', 'list-outside',
+          'px-5', 'my-8'
+        ];
         node.properties = node.properties || {};
-        node.properties.className = ['list-disc', 'list-outside', 'px-5', 'mb-5'];
+        node.properties.className = LIST_CLASSES;
       }
 			if (node.tagName === 'li') {
+        const LIST_ITEM_CLASSES = [
+          'text-[18px]', 'lg:text-[16px]',
+          'font-[Inter]',
+          'font-medium',
+          'leading-[24px]', 'lg:leading-[22px]',
+          'ml-1'
+        ];
         node.properties = node.properties || {};
-        node.properties.className = ['mx-10'];
+        node.properties.className = LIST_ITEM_CLASSES;
       }
     });
   };
