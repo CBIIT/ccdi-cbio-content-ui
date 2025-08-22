@@ -125,7 +125,15 @@ const About: FC = () => {
               <div key={processedAbout.sha}>
                 <AboutContent content={processedAbout.mainContent} />
                 <h2
-                  className="text-[25px] lg:text-[22px] font-[Poppins] font-normal leading-[26px] tracking-[-0.05px] lg:tracking-[-0.044px] text-[#05555C] mt-15 mb-2 flex items-center uppercase"
+                  className="
+                    text-[25px] lg:text-[22px]
+                    font-[Poppins]
+                    font-normal
+                    leading-[26px]
+                    tracking-[-0.05px] lg:tracking-[-0.044px]
+                    text-[#05555C]
+                    mt-15 mb-2 flex items-center uppercase
+                  "
                 >
                   {processedAbout.titles[0].text}
                 </h2>
