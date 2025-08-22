@@ -132,7 +132,8 @@ const About: FC = () => {
                     leading-[26px]
                     tracking-[-0.05px] lg:tracking-[-0.044px]
                     text-[#05555C]
-                    mt-15 mb-2 flex items-center uppercase
+                    mt-10 lg:mt-15
+                    mb-2 flex items-center uppercase
                   "
                 >
                   {processedAbout.titles[0].text}
