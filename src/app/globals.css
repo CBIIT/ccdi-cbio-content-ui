@@ -41,16 +41,3 @@ body {
 #about .contact-section a {
   overflow-wrap: break-word; /* ensure long emails/urls wrap */
 }
-
-@media (max-width: 1024px) {
-  #about p, #about a, #about li {
-    font-size: 18px; /* override inline utility */
-    line-height: 24px;
-  }
-
-  #about h2 {
-    font-size: 25px; /* override inline utility */
-    letter-spacing: -0.05px;
-    line-height: 26px;
-  }
-}

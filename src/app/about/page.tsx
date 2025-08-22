@@ -119,13 +119,13 @@ const About: FC = () => {
         </div>
       </div>
       <section id="about" className="pt-10 pb-1 bg-white">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+        <div className="container lg:mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
           <div className="prose prose-lg max-w-none">
             {processedAbouts.length > 0 && processedAbouts.map(processedAbout => (
               <div key={processedAbout.sha}>
                 <AboutContent content={processedAbout.mainContent} />
                 <h2
-                  className="text-[22px] font-[Poppins] font-normal leading-[26px] tracking-[-0.044px] text-[#05555C] mt-15 mb-2 flex items-center uppercase"
+                  className="text-[25px] lg:text-[22px] font-[Poppins] font-normal leading-[26px] tracking-[-0.05px] lg:tracking-[-0.044px] text-[#05555C] mt-15 mb-2 flex items-center uppercase"
                 >
                   {processedAbout.titles[0].text}
                 </h2>
