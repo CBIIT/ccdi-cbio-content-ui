@@ -87,23 +87,25 @@ const About: FC = () => {
   return (
     <main ref={mainContentRef}>
       <div className="about-header-image">
-        {/* Mobile (<640px) */}
+        {/* Mobile (<768px) */}
         <Image
           src={headerImgMobile}
           alt="About Page Mobile Header"
           priority
-          className="block sm:hidden w-full object-cover"
+          className="block md:hidden w-full object-cover"
         />
-        {/* Tablet (>=640px and <1024px) */}
+        {/* Tablet (>=768px and <1024px) */}
         <Image
           src={headerImgTablet}
           alt="About Page Tablet Header"
-          className="hidden sm:block lg:hidden w-full object-cover"
+          priority
+          className="hidden md:block lg:hidden w-full object-cover"
         />
         {/* Desktop (>=1024px) */}
         <Image
           src={headerImg}
           alt="About Page Desktop Header"
+          priority
           className="hidden lg:block w-full object-cover"
         />
       </div>
