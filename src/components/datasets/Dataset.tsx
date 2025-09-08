@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { fetchDatasetContent } from '@/utilities/data-fetching';
 import { DatasetHeader } from './DatasetHeader';
 import { DatasetContent } from './DatasetContent';
+import { UpdatedDatasetBody } from './UpdatedDatasetBody';
 import { GitHubDataset } from '@/app/page';
 import {
   processMarkdown,
@@ -13,20 +14,37 @@ import {
   extractContent
 } from './handleDatasets';
 
+import {
+  processMarkdown as updatedProcessMarkdown,
+  extractTitles as updatedExtractTitles,
+  extractH2Content as updatedExtractH2Content,
+  extractSubtitles as updatedExtractSubtitles,
+  extractH3Contents as updatedExtractH3Contents,
+  extractDataCategories as updatedExtractDataCategories,
+  extractH5Contents as updatedExtractH5Contents
+} from './handleUpdatedDatasets';
+
 interface ProcessedGitHubDataset {
-  titles: {
+  titles?: {
     id: string;
     text: string;
   }[];
-  subtitles: {
+  subtitles?: {
     id: string;
     text: string;
   }[];
-  dates: {
+  dates?: {
     id: string;
     text: string;
   }[];
-  content: string;
+  dataCategories?: {
+    id: string;
+    text: string;
+  }[];
+  content?: string;
+  h2Content?: string;
+  h3Contents?: string[];
+  h5Contents?: string[];
   name: string;
   path: string;
   type: string;
@@ -46,19 +64,39 @@ export default function DataAccessCards({ datasets, isDev }: { datasets: GitHubD
             if (!slug) {
               return null;
             }
-            const fetchedContent = await fetchDatasetContent(slug, isDev);
-            const fetchedProcessedContent = await processMarkdown(fetchedContent);
-            const titles = extractTitles(fetchedProcessedContent);
-            const subtitles = extractSubtitles(fetchedProcessedContent);
-            const dates = extractDates(fetchedProcessedContent);
-            const content = extractContent(fetchedProcessedContent);
-            return {
-              ...dataset,
-              titles,
-              subtitles,
-              dates,
-              content
-            };
+            if (slug === 'dataset_1') {
+              const fetchedContent = await fetchDatasetContent(slug, isDev);
+              const fetchedProcessedContent = await updatedProcessMarkdown(fetchedContent);
+              const titles = updatedExtractTitles(fetchedProcessedContent);
+              const h2Content = updatedExtractH2Content(fetchedProcessedContent);
+              const subtitles = updatedExtractSubtitles(fetchedProcessedContent);
+              const h3Contents = updatedExtractH3Contents(fetchedProcessedContent);
+              const dataCategories = updatedExtractDataCategories(fetchedProcessedContent);
+              const h5Contents = updatedExtractH5Contents(fetchedProcessedContent);
+              return {
+                ...dataset,
+                titles,
+                subtitles,
+                dataCategories,
+                h2Content,
+                h3Contents,
+                h5Contents
+              };
+            } else {
+              const fetchedContent = await fetchDatasetContent(slug, isDev);
+              const fetchedProcessedContent = await processMarkdown(fetchedContent);
+              const titles = extractTitles(fetchedProcessedContent);
+              const subtitles = extractSubtitles(fetchedProcessedContent);
+              const dates = extractDates(fetchedProcessedContent);
+              const content = extractContent(fetchedProcessedContent);
+              return {
+                ...dataset,
+                titles,
+                subtitles,
+                dates,
+                content
+              };
+            }
           })
         );
         setProcessedDatasets(formattedDatasets);
@@ -87,12 +125,25 @@ export default function DataAccessCards({ datasets, isDev }: { datasets: GitHubD
                   key={processedDataset?.sha}
                   className="overflow-hidden mb-2.5 p-2 w-full bg-white rounded border border-solid border-neutral-300"
                 >
-                  <DatasetHeader
-                    title={processedDataset?.titles[0].text || ''}
-                    date={processedDataset?.dates[0].text || ''}
-                    subtitle={processedDataset?.subtitles[0].text || ''}
-                  />
-                  <DatasetContent content={processedDataset?.content || ''} />
+                  {processedDataset?.name === 'dataset_1.md' ? (
+                    <UpdatedDatasetBody
+                      title={processedDataset?.titles?.[0].text || ''}
+                      subtitles={processedDataset?.subtitles || []}
+                      dataCategories={processedDataset?.dataCategories || []}
+                      h2Content={processedDataset?.h2Content || ''}
+                      h3Contents={processedDataset?.h3Contents || []}
+                      h5Contents={processedDataset?.h5Contents || []}
+                    />
+                  ) : (
+                    <>
+                      <DatasetHeader
+                        title={processedDataset?.titles?.[0].text || ''}
+                        date={processedDataset?.dates?.[0].text || ''}
+                        subtitle={processedDataset?.subtitles?.[0].text || ''}
+                      />
+                      <DatasetContent content={processedDataset?.content || ''} />
+                    </>
+                  )}
                 </article>
               ))}
             </div>
