@@ -78,6 +78,7 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
     if (loading) return;
 
     const boundElements = new WeakSet<Element>();
+    const refs = mainContentRefs.current;
 
     // Use event delegation to avoid duplicate listeners
     const delegateClick = (e: Event) => {
@@ -89,7 +90,7 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
       }
     };
 
-    mainContentRefs.current.forEach(mainContentRef => {
+    refs.forEach(mainContentRef => {
       if (!mainContentRef) return;
       
       // Add single delegated listener per container
@@ -100,7 +101,7 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
     });
 
     return () => {
-      mainContentRefs.current.forEach(mainContentRef => {
+      refs.forEach(mainContentRef => {
         if (mainContentRef && boundElements.has(mainContentRef)) {
           mainContentRef.removeEventListener('click', delegateClick);
         }
