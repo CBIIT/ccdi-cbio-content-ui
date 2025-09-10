@@ -37,7 +37,7 @@ export default function Home() {
 
         try {
           const { releases, datasets } = await fetchGitHubData(isDevEnv);
-          setReleases(releases.reverse());
+          setReleases(releases);
           setDatasets(datasets);
         } catch (error) {
           console.error(error);

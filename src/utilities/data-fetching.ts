@@ -49,7 +49,7 @@ async function fetchGitHubData(isDev: boolean = false) {
         }
 
         const releaseNotesData = await releaseNotesResponse.json();
-        const releaseNotes = releaseNotesData.filter((item: { type: string; name: string }) => item.type === 'file' && item.name.endsWith('.md'));
+        const releaseNotes = releaseNotesData.filter((item: { type: string; name: string }) => item.type === 'file' && item.name.endsWith('.md')).reverse();
 
         return {
           ...release,
