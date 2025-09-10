@@ -112,7 +112,7 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
         observers.forEach(observer => observer.disconnect());
       };
     }
-  }, [loading, releaseNotes, handleTabClick]);
+  }, [loading, handleTabClick]);
 
   if (loading) {
     return <div>Loading...</div>;
