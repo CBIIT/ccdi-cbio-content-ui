@@ -79,15 +79,12 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
       const observers: ResizeObserver[] = [];
       const registrations: { el: Element; handler: EventListener }[] = [];
 
-      const handler: EventListener = () => {
-        handleTabClick('dataset-updates');
-      };
-
       const attachHandlers = (container: HTMLDivElement) => {
         const wrappers = container.querySelectorAll('.dataset-updates');
         wrappers.forEach(wrapper => {
-          // Remove previous click handler before adding
-          wrapper.removeEventListener('click', handler);
+          const handler: EventListener = () => {
+            handleTabClick('dataset-updates');
+          };
           wrapper.addEventListener('click', handler);
           registrations.push({ el: wrapper, handler });
         });
