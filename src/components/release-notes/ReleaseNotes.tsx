@@ -75,41 +75,38 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
   }, []);
 
   useEffect(() => {
-    if (!loading) {
-      const observers: ResizeObserver[] = [];
-      const registrations: { el: Element; handler: EventListener }[] = [];
+    if (loading) return;
 
-      const attachHandlers = (container: HTMLDivElement) => {
-        const wrappers = container.querySelectorAll('.dataset-updates');
-        wrappers.forEach(wrapper => {
-          const handler: EventListener = () => {
-            handleTabClick('dataset-updates');
-          };
-          wrapper.addEventListener('click', handler);
-          registrations.push({ el: wrapper, handler });
-        });
-      };
+    const boundElements = new WeakSet<Element>();
 
+    // Use event delegation to avoid duplicate listeners
+    const delegateClick = (e: Event) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      const clickable = target.closest('.dataset-updates');
+      if (clickable) {
+        handleTabClick('dataset-updates');
+      }
+    };
+
+    mainContentRefs.current.forEach(mainContentRef => {
+      if (!mainContentRef) return;
+      
+      // Add single delegated listener per container
+      if (!boundElements.has(mainContentRef)) {
+        mainContentRef.addEventListener('click', delegateClick);
+        boundElements.add(mainContentRef);
+      }
+    });
+
+    return () => {
       mainContentRefs.current.forEach(mainContentRef => {
-        if (!mainContentRef) return;
-        // Initial attach
-        attachHandlers(mainContentRef);
-        const resizeObserver = new ResizeObserver(() => {
-          // Observe size changes (in case content expands / async fragments inject)
-          attachHandlers(mainContentRef);
-        });
-        resizeObserver.observe(mainContentRef);
-        observers.push(resizeObserver);
+        if (mainContentRef && boundElements.has(mainContentRef)) {
+          mainContentRef.removeEventListener('click', delegateClick);
+        }
       });
-
-      return () => {
-        registrations.forEach(({ el, handler }) => {
-          el.removeEventListener('click', handler);
-        });
-        observers.forEach(observer => observer.disconnect());
-      };
-    }
-  }, [loading, releaseNotes]);
+    };
+  }, [loading]);
 
   if (loading) {
     return <div>Loading...</div>;
