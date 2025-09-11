@@ -120,32 +120,35 @@ export default function DataAccessCards({ datasets, isDev }: { datasets: GitHubD
         <div className="flex justify-center items-start pt-5 max-w-[1260px] min-w-60 w-[960px]">
           <div className="px-2.5 pt-1.5 pb-0 min-w-60 w-[960px] max-md:max-w-full">
             <div className="w-full">
-              {processedDatasets.length > 0 && processedDatasets.map(processedDataset => (
-                <article
-                  key={processedDataset?.sha}
-                  className="overflow-hidden mb-2.5 p-2 w-full bg-white rounded border border-solid border-neutral-300"
-                >
-                  {processedDataset?.name === 'dataset_1.md' ? (
-                    <UpdatedDatasetBody
-                      title={processedDataset?.titles?.[0].text || ''}
-                      subtitles={processedDataset?.subtitles || []}
-                      dataCategories={processedDataset?.dataCategories || []}
-                      h2Content={processedDataset?.h2Content || ''}
-                      h3Contents={processedDataset?.h3Contents || []}
-                      h5Contents={processedDataset?.h5Contents || []}
-                    />
-                  ) : (
-                    <>
-                      <DatasetHeader
-                        title={processedDataset?.titles?.[0].text || ''}
-                        date={processedDataset?.dates?.[0].text || ''}
-                        subtitle={processedDataset?.subtitles?.[0].text || ''}
+              {processedDatasets.length > 0 && processedDatasets.map(processedDataset => {
+                if (!processedDataset) return null;
+                return (
+                  <article
+                    key={processedDataset.sha}
+                    className="overflow-hidden mb-2.5 p-2 w-full bg-white rounded border border-solid border-neutral-300"
+                  >
+                    {processedDataset.name === 'dataset_1.md' ? (
+                      <UpdatedDatasetBody
+                        title={processedDataset.titles?.[0].text || ''}
+                        subtitles={processedDataset.subtitles || []}
+                        dataCategories={processedDataset.dataCategories || []}
+                        h2Content={processedDataset.h2Content || ''}
+                        h3Contents={processedDataset.h3Contents || []}
+                        h5Contents={processedDataset.h5Contents || []}
                       />
-                      <DatasetContent content={processedDataset?.content || ''} />
-                    </>
-                  )}
-                </article>
-              ))}
+                    ) : (
+                      <>
+                        <DatasetHeader
+                          title={processedDataset.titles?.[0].text || ''}
+                          date={processedDataset.dates?.[0].text || ''}
+                          subtitle={processedDataset.subtitles?.[0].text || ''}
+                        />
+                        <DatasetContent content={processedDataset.content || ''} />
+                      </>
+                    )}
+                  </article>
+                );
+              })}
             </div>
             <footer className="flex gap-10 pt-3.5 pb-0 w-full border-slate-300 border-t-[3px] max-md:max-w-full" />
           </div>

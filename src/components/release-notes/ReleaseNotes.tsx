@@ -37,7 +37,8 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
   const [releaseNotes, setReleaseNotes] = useState<(ProcessedGitHubReleaseNotes | null)[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const mainContentRef = useRef<HTMLDivElement>(null);
+  // Dynamic refs: one per rendered release note container
+  const mainContentRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const loadData = async () => {
@@ -74,21 +75,39 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
   }, []);
 
   useEffect(() => {
-    if (!loading) {
-      const observer = new ResizeObserver(() => {
-        const wrapper = mainContentRef.current?.querySelector('#dataset-updates');
-        wrapper?.addEventListener('click', () => {
-          handleTabClick('dataset-updates');
-        });
-      });
-      if (mainContentRef.current) {
-        observer.observe(mainContentRef.current);
+    if (loading) return;
+
+    const boundElements = new WeakSet<Element>();
+    const refs = mainContentRefs.current;
+
+    // Use event delegation to avoid duplicate listeners
+    const delegateClick = (e: Event) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      const clickable = target.closest('.dataset-updates');
+      if (clickable) {
+        handleTabClick('dataset-updates');
       }
-      return () => {
-        observer.disconnect();
-      };
-    }
-  });
+    };
+
+    refs.forEach(mainContentRef => {
+      if (!mainContentRef) return;
+      
+      // Add single delegated listener per container
+      if (!boundElements.has(mainContentRef)) {
+        mainContentRef.addEventListener('click', delegateClick);
+        boundElements.add(mainContentRef);
+      }
+    });
+
+    return () => {
+      refs.forEach(mainContentRef => {
+        if (mainContentRef && boundElements.has(mainContentRef)) {
+          mainContentRef.removeEventListener('click', delegateClick);
+        }
+      });
+    };
+  }, [loading]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -99,17 +118,23 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
       <div className="flex overflow-hidden gap-2.5 justify-center items-start w-full bg-white max-md:max-w-full">
         <div className="flex justify-center items-start pt-5 max-w-[1260px] min-w-60 w-[960px]">
           <div className="px-2.5 pt-1.5 pb-0 min-w-60 w-[960px] max-md:max-w-full">
-            {releaseNotes.length > 0 && releaseNotes.map(releaseNote => (
-              <article key={releaseNote?.sha} className="w-full mb-2.5">
-                <div ref={mainContentRef} className="p-2 w-full bg-white rounded border border-solid border-neutral-300">
-                  <ReleaseNotesHeader
-                    version={releaseNote?.titles[0].text || ''}
-                    date={releaseNote?.dates[0].text || ''}
-                  />
-                  <ReleaseNotesContent content={releaseNote?.content || ''} />
-                </div>
-              </article>
-            ))}
+            {releaseNotes.length > 0 && releaseNotes.map((releaseNote, index) => {
+              if (!releaseNote) return null;
+              return (
+                <article key={releaseNote.sha} className="w-full mb-2.5">
+                  <div
+                    ref={el => { mainContentRefs.current[index] = el; }}
+                    className="p-2 w-full bg-white rounded border border-solid border-neutral-300"
+                  >
+                    <ReleaseNotesHeader
+                      version={releaseNote.titles[0].text || ''}
+                      date={releaseNote.dates[0].text || ''}
+                    />
+                    <ReleaseNotesContent content={releaseNote.content || ''} />
+                  </div>
+                </article>
+              );
+            })}
             <footer className="flex gap-10 pt-3.5 pb-0 w-full border-slate-300 border-t-[3px] max-md:max-w-full" />
           </div>
         </div>
