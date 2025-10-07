@@ -23,8 +23,11 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ARG NEXT_PUBLIC_CONTENT_API_TOKEN
 ENV NEXT_PUBLIC_CONTENT_API_TOKEN=${NEXT_PUBLIC_CONTENT_API_TOKEN}
+ARG NEXT_PUBLIC_VERSION
+ENV NEXT_PUBLIC_VERSION=${NEXT_PUBLIC_VERSION}
 # Create .env file with the GitHub token
 RUN echo "NEXT_PUBLIC_CONTENT_API_TOKEN=${NEXT_PUBLIC_CONTENT_API_TOKEN}" > .env
+RUN echo "NEXT_PUBLIC_VERSION=${NEXT_PUBLIC_VERSION}" >> .env
 RUN npm run build
 
 # Production image, copy all the files and run next
@@ -50,10 +53,11 @@ EXPOSE 3001
 ENV PORT=3001
 ARG NEXT_PUBLIC_CONTENT_API_TOKEN
 ENV NEXT_PUBLIC_CONTENT_API_TOKEN=${NEXT_PUBLIC_CONTENT_API_TOKEN}
+ENV NEXT_PUBLIC_VERSION=${NEXT_PUBLIC_VERSION}
 
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/config/next-config-js/output
 ENV HOSTNAME="0.0.0.0"
 CMD ["node", "server.js"]
 
-# docker build --build-arg NEXT_PUBLIC_CONTENT_API_TOKEN=<your_token_here> -t ccdi-cbio-content-ui .
+# docker build --build-arg NEXT_PUBLIC_CONTENT_API_TOKEN=<your_token_here> --build-arg NEXT_PUBLIC_VERSION=<your_version_here> -t ccdi-cbio-content-ui .
