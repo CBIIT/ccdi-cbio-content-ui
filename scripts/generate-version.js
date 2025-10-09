@@ -26,7 +26,7 @@ try {
     const outDir = path.join(__dirname, '..', 'public');
     if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
     const outFile = path.join(outDir, 'version.json');
-    fs.writeFileSync(outFile, JSON.stringify({ version }, null, 2));
+    fs.writeFileSync(outFile, JSON.stringify({ version: version || 'unknown' }, null, 2));
   } else {
     throw new Error('NEXT_PUBLIC_VERSION not found in .env or .env.EXAMPLE');
   }
