@@ -18,7 +18,7 @@ jobs:
         name: Build and push image to ECR
         runs-on: ubuntu-latest
         env:
-            ECR_REPOSITORY: ccdi-cbioportal-backend
+            ECR_REPOSITORY: ccdi-cbioportal-content-ui
 
         steps:
           - name: Checkout repository
