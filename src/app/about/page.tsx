@@ -42,7 +42,9 @@ const About: FC = () => {
   useEffect(() => {
     const loadData = async () => {
       if (typeof window !== 'undefined') {
-        const isDevEnv = (process.env.NODE_ENV === 'development') || !!window.location.search;
+        const tierNameArr = window.location.hostname.split('.')[0].split('-');
+        const isLocalEnv = process.env.NODE_ENV === 'development';
+        const isDevEnv = isLocalEnv || tierNameArr.includes('dev') || tierNameArr.includes('qa');
 
         try {
           const { aboutFiles, content } = await fetchAboutData(isDevEnv);
