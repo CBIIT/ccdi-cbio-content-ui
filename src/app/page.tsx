@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { fetchGitHubData } from '@/utilities/data-fetching';
+import { isDevEnv as checkIsDevEnv } from '@/utilities/environment';
 import DatasetAndReleaseNotes from '@/components/DatasetAndReleaseNotes';
 
 export interface GitHubRelease {
@@ -32,7 +33,7 @@ export default function Home() {
   useEffect(() => {
     const loadData = async () => {
       if (typeof window !== 'undefined') {
-        const isDevEnv = (process.env.NODE_ENV === 'development') || !!window.location.search;
+        const isDevEnv = checkIsDevEnv(window.location.hostname);
         setIsDev(isDevEnv);
 
         try {
