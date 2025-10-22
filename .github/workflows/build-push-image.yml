@@ -50,7 +50,7 @@ jobs:
 
           - name: Build Docker image
             run: |
-                docker buildx build --no-cache --output type=docker --platform linux/amd64 --build-arg NEXT_PUBLIC_CONTENT_API_TOKEN=${{ secrets.NEXT_PUBLIC_CONTENT_API_TOKEN }} -t ${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
+                docker buildx build --no-cache --output type=docker --platform linux/amd64 --build-arg NEXT_PUBLIC_CONTENT_API_TOKEN=${{ secrets.NEXT_PUBLIC_CONTENT_API_TOKEN }} --build-arg NEXT_PUBLIC_VERSION=${{ env.IMAGE_TAG }} -t ${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }} .
 
           - name: Set Trivy exit code
             run: |
