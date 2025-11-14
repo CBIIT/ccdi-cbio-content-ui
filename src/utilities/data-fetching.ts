@@ -6,13 +6,13 @@ function getValidatedToken() {
   return token;
 }
 
-async function fetchGitHubData(isDev: boolean = false) {
+async function fetchGitHubData(tier: string = 'dev') {
   const token = getValidatedToken();
 
   try {
     // Fetch releases
     const releasesResponse = await fetch(
-      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases${isDev ? '?ref=dev' : ''}`,
+      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases${tier === 'prod' ? '' : `?ref=${tier}`}`,
       {
         headers: {
           'Accept': 'application/vnd.github.v3+json',
@@ -34,7 +34,7 @@ async function fetchGitHubData(isDev: boolean = false) {
       releases.map(async (release: { name: string }) => {
         const year = release.name;
         const releaseNotesResponse = await fetch(
-          `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}${isDev ? '?ref=dev' : ''}`,
+          `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}${tier === 'prod' ? '' : `?ref=${tier}`}`,
           {
             headers: {
               'Accept': 'application/vnd.github.v3+json',
@@ -60,7 +60,7 @@ async function fetchGitHubData(isDev: boolean = false) {
 
     // Fetch datasets
     const datasetsResponse = await fetch(
-      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets${isDev ? '?ref=dev' : ''}`,
+      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets${tier === 'prod' ? '' : `?ref=${tier}`}`,
       {
         headers: {
           'Accept': 'application/vnd.github.v3+json',
@@ -87,12 +87,12 @@ async function fetchGitHubData(isDev: boolean = false) {
   }
 }
 
-async function fetchAboutData(isDev: boolean = false) {
+async function fetchAboutData(tier: string = 'dev') {
   const token = getValidatedToken();
 
   try {
     const response = await fetch(
-      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/about${isDev ? '?ref=dev' : ''}`,
+      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/about${tier === 'prod' ? '' : `?ref=${tier}`}`,
       {
         headers: {
           'Accept': 'application/vnd.github.v3+json',
@@ -111,7 +111,7 @@ async function fetchAboutData(isDev: boolean = false) {
     
     if (aboutFile) {
       const contentResponse = await fetch(
-        `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/about/about.md${isDev ? '?ref=dev' : ''}`,
+        `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/about/about.md${tier === 'prod' ? '' : `?ref=${tier}`}`,
         {
           headers: {
             'Accept': 'application/vnd.github.v3.raw',
@@ -136,12 +136,12 @@ async function fetchAboutData(isDev: boolean = false) {
   }
 }
 
-async function fetchReleaseNoteContent(year: string, slug: string, isDev: boolean = false) {
+async function fetchReleaseNoteContent(year: string, slug: string, tier: string = 'dev') {
   const token = getValidatedToken();
 
   try {
     const response = await fetch(
-      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}/${slug}.md${isDev ? '?ref=dev' : ''}`,
+      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}/${slug}.md${tier === 'prod' ? '' : `?ref=${tier}`}`,
       {
         headers: {
           'Accept': 'application/vnd.github.v3.raw',
@@ -163,12 +163,12 @@ async function fetchReleaseNoteContent(year: string, slug: string, isDev: boolea
   }
 }
 
-async function fetchDatasetContent(slug: string, isDev: boolean = false) {
+async function fetchDatasetContent(slug: string, tier: string = 'dev') {
   const token = getValidatedToken();
 
   try {
     const response = await fetch(
-      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets/${slug}.md${isDev ? '?ref=dev' : ''}`,
+      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets/${slug}.md${tier === 'prod' ? '' : `?ref=${tier}`}`,
       {
         headers: {
           'Accept': 'application/vnd.github.v3.raw',

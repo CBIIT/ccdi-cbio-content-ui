@@ -2,7 +2,7 @@
 
 import { FC, useState, useEffect, useRef } from 'react';
 import { fetchAboutData } from '@/utilities/data-fetching';
-import { isDevEnv } from '@/utilities/environment';
+import { getTierName } from '@/utilities/environment';
 import Image from 'next/image';
 import { AboutContent } from '@/components/about/AboutContent';
 import {
@@ -44,7 +44,7 @@ const About: FC = () => {
     const loadData = async () => {
       if (typeof window !== 'undefined') {
         try {
-          const { aboutFiles, content } = await fetchAboutData(isDevEnv(window.location.hostname));
+          const { aboutFiles, content } = await fetchAboutData(getTierName(window.location.hostname));
           const formattedAbouts = await Promise.all(
             aboutFiles.map(async (fetchedAbout: GitHubAbout) => {
               const fetchedProcessedContent = await processMarkdown(content);

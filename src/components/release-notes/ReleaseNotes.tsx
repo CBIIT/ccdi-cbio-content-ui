@@ -28,9 +28,9 @@ interface ProcessedGitHubReleaseNotes {
   sha?: string;
 }
 
-export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
+export default function ReleaseNotes({ releases, tier, handleTabClick }: {
   releases: GitHubRelease[],
-  isDev: boolean,
+  tier: string,
   handleTabClick: (tabId: string) => void
 }) {
   const flattenedReleasesWithReleaseNotes = releases.map(release => release.releaseNotes).flat();
@@ -50,7 +50,7 @@ export default function ReleaseNotes({ releases, isDev, handleTabClick }: {
             if (!year || !slug) {
               return null;
             }
-            const fetchedContent = await fetchReleaseNoteContent(year, slug, isDev);
+            const fetchedContent = await fetchReleaseNoteContent(year, slug, tier);
             const fetchedProcessedContent = await processMarkdown(fetchedContent);
             const titles = extractTitles(fetchedProcessedContent);
             const dates = extractDates(fetchedProcessedContent);

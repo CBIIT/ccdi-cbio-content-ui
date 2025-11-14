@@ -17,7 +17,7 @@ const tabs = [
   }
 ];
 
-const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDataset[], isDev: boolean }> = ({ releases, datasets, isDev }) => {
+const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDataset[], tier: string }> = ({ releases, datasets, tier }) => {
   const [activeTabId, setActiveTabId] = useState(tabs[0].id);
 
   const mainContentRef = useRef<HTMLDivElement>(null);
@@ -80,8 +80,8 @@ const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDa
         </div>
       </section>
       <section>
-        {activeTabId === tabs[0].id && <ReleaseNotes releases={releases} isDev={isDev} handleTabClick={handleTabClick} />}
-        {activeTabId === tabs[1].id && <Dataset datasets={datasets} isDev={isDev} />}
+        {activeTabId === tabs[0].id && <ReleaseNotes releases={releases} tier={tier} handleTabClick={handleTabClick} />}
+        {activeTabId === tabs[1].id && <Dataset datasets={datasets} tier={tier} />}
       </section>
     </div>
   );
