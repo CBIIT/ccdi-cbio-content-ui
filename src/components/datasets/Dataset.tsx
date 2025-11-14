@@ -51,7 +51,7 @@ interface ProcessedGitHubDataset {
   sha?: string;
 }
 
-export default function DataAccessCards({ datasets, isDev }: { datasets: GitHubDataset[], isDev: boolean }) {
+export default function DataAccessCards({ datasets, tier }: { datasets: GitHubDataset[], tier: string }) {
   const [processedDatasets, setProcessedDatasets] = useState<(ProcessedGitHubDataset | null)[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -65,7 +65,7 @@ export default function DataAccessCards({ datasets, isDev }: { datasets: GitHubD
               return null;
             }
             if (slug === 'dataset_1') {
-              const fetchedContent = await fetchDatasetContent(slug, isDev);
+              const fetchedContent = await fetchDatasetContent(slug, tier);
               const fetchedProcessedContent = await updatedProcessMarkdown(fetchedContent);
               const titles = updatedExtractTitles(fetchedProcessedContent);
               const h2Content = updatedExtractH2Content(fetchedProcessedContent);
@@ -83,7 +83,7 @@ export default function DataAccessCards({ datasets, isDev }: { datasets: GitHubD
                 h5Contents
               };
             } else {
-              const fetchedContent = await fetchDatasetContent(slug, isDev);
+              const fetchedContent = await fetchDatasetContent(slug, tier);
               const fetchedProcessedContent = await processMarkdown(fetchedContent);
               const titles = extractTitles(fetchedProcessedContent);
               const subtitles = extractSubtitles(fetchedProcessedContent);

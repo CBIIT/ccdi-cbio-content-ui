@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { fetchGitHubData } from '@/utilities/data-fetching';
-import { isDevEnv as checkIsDevEnv } from '@/utilities/environment';
+import { getTierName } from '@/utilities/environment';
 import DatasetAndReleaseNotes from '@/components/DatasetAndReleaseNotes';
 
 export interface GitHubRelease {
@@ -28,16 +28,16 @@ export default function Home() {
   const [releases, setReleases] = useState<GitHubRelease[]>([]);
   const [datasets, setDatasets] = useState<GitHubDataset[]>([]);
   const [loading, setLoading] = useState(true);
-  const [isDev, setIsDev] = useState(false);
+  const [tier, setTier] = useState('dev');
 
   useEffect(() => {
     const loadData = async () => {
       if (typeof window !== 'undefined') {
-        const isDevEnv = checkIsDevEnv(window.location.hostname);
-        setIsDev(isDevEnv);
+        const tierName = getTierName(window.location.hostname);
+        setTier(tierName);
 
         try {
-          const { releases, datasets } = await fetchGitHubData(isDevEnv);
+          const { releases, datasets } = await fetchGitHubData(tierName);
           setReleases(releases);
           setDatasets(datasets);
         } catch (error) {
@@ -57,7 +57,7 @@ export default function Home() {
 
   return (
     <main>
-      <DatasetAndReleaseNotes releases={releases} datasets={datasets} isDev={isDev} />
+      <DatasetAndReleaseNotes releases={releases} datasets={datasets} tier={tier} />
     </main>
   );
 }
