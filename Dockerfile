@@ -1,10 +1,6 @@
 # Setup Node
-FROM node:22-alpine3.22 AS base
+FROM node:22-alpine3.20 AS base
 
-# Verify OpenSSL version
-RUN apk update && apk --no-cache upgrade openssl \
-  && openssl version \
-  && node -p "process.versions.openssl"
 
 # Install dependencies
 FROM base AS deps
