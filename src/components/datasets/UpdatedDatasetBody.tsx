@@ -44,7 +44,7 @@ export const UpdatedDatasetBody: React.FC<UpdatedDatasetBodyProps> = ({
             >
             </section>
           </section>
-          {index === h3Contents.length - 1 && h5Contents.length > 0 && h5Contents.map((h5Content, i) => (
+          {index === 2 && h5Contents.length > 0 && h5Contents.map((h5Content, i) => (
             <section key={dataCategories[i].id}>
               <h4 className="mt-2.5 text-sm font-semibold leading-none text-sky-800">
                 <span>{dataCategories[i].text}</span>

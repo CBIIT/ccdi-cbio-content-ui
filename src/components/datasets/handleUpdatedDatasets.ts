@@ -87,14 +87,17 @@ export function extractH3Contents(content: string): string[] {
 	}
   const h3Contents = content.split('</h3>');
   const updatedH3Contents = [];
-  for (let i = 1; i < h3Contents.length - 1; i++) {
-    h3Contents[i] = h3Contents[i].trim().split('<h3')[0].trim();
+  for (let i = 1; i < h3Contents.length; i++) {
+    if (i === 3) {
+      // Handle the h3 content which contains h5 contents (TODO: A special case, not widely used)
+      h3Contents[i] = h3Contents[i].trim().split('<h5')[0].trim();
+    } else {
+      h3Contents[i] = h3Contents[i].trim().split('<h3')[0].trim();
+    }
     updatedH3Contents.push(h3Contents[i]);
   }
 
-  // Handle the last h3 content which contains h5 contents (TODO: A special case, not widely used)
-  const lastH3Content = h3Contents[h3Contents.length - 1].trim().split('<h5')[0].trim();
-  return [...updatedH3Contents, lastH3Content];
+  return updatedH3Contents;
 }
 
 export function extractDataCategories(content: string): { id: string; text: string }[] {
@@ -115,5 +118,5 @@ export function extractH5Contents(content: string): string[] {
     updatedH5Contents.push(h5Contents[i]);
   }
 
-  return [...updatedH5Contents, h5Contents[h5Contents.length - 1].trim()];
+  return [...updatedH5Contents, h5Contents[h5Contents.length - 1].trim().split('<h3')[0].trim()];
 }
