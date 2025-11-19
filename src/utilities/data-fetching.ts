@@ -136,6 +136,55 @@ async function fetchAboutData(tier: string = 'dev') {
   }
 }
 
+async function fetchDataUsingData(tier: string = 'dev') {
+  const token = getValidatedToken();
+
+  try {
+    const response = await fetch(
+      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/data-using${tier === 'prod' ? '' : `?ref=${tier}`}`,
+      {
+        headers: {
+          'Accept': 'application/vnd.github.v3+json',
+          'Authorization': `Bearer ${token}`
+        },
+        next: { revalidate: 3600 }
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch data using files');
+    }
+
+    const dataUsingFiles = await response.json();
+    const dataUsingFile = dataUsingFiles.find((file: { name: string }) => file.name === 'data_using.md');
+    
+    if (dataUsingFile) {
+      const contentResponse = await fetch(
+        `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/data-using/data_using.md${tier === 'prod' ? '' : `?ref=${tier}`}`,
+        {
+          headers: {
+            'Accept': 'application/vnd.github.v3.raw',
+            'Authorization': `Bearer ${token}`
+          },
+          next: { revalidate: 3600 }
+        }
+      );
+
+      if (!contentResponse.ok) {
+        throw new Error('Failed to fetch data using content');
+      }
+
+      const content = await contentResponse.text();
+      return { dataUsingFile, content };
+    }
+
+    return { dataUsingFile: null, content: '' };
+  } catch (error) {
+    console.error('Error fetching data using data:', error);
+    throw error;
+  }
+}
+
 async function fetchReleaseNoteContent(year: string, slug: string, tier: string = 'dev') {
   const token = getValidatedToken();
 
@@ -193,6 +242,7 @@ async function fetchDatasetContent(slug: string, tier: string = 'dev') {
 export { 
   fetchGitHubData, 
   fetchAboutData, 
+  fetchDataUsingData,
   fetchReleaseNoteContent, 
   fetchDatasetContent 
 };

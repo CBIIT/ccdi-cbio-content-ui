@@ -69,7 +69,9 @@ const About: FC = () => {
   useEffect(() => {
     const observer = new ResizeObserver(() => {
       const height = mainContentRef.current?.scrollHeight;
-      window.parent.postMessage(['setHeight', height], '*');
+      if (height && typeof window !== 'undefined') {
+        window.parent.postMessage(['setHeight', height], '*');
+      }
     });
     if (mainContentRef.current) {
       observer.observe(mainContentRef.current);
@@ -132,7 +134,7 @@ const About: FC = () => {
                     tracking-[-0.05px] lg:tracking-[-0.044px]
                     text-[#05555C]
                     mt-10 lg:mt-15
-                    mb-2 flex items-center uppercase
+                    mb-2 flex items-center
                   "
                 >
                   {processedAbout.titles[0].text}
