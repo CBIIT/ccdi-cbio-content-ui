@@ -139,9 +139,9 @@ export default function DataAccessCards({ datasets, tier }: { datasets: GitHubDa
                     ) : (
                       <>
                         <DatasetHeader
-                          title={processedDataset.titles?.[0].text || ''}
-                          date={processedDataset.dates?.[0].text || ''}
-                          subtitle={processedDataset.subtitles?.[0].text || ''}
+                          title={processedDataset.titles?.[0]?.text || ''}
+                          date={processedDataset.dates?.[0]?.text || ''}
+                          subtitle={processedDataset.subtitles?.[0]?.text || ''}
                         />
                         <DatasetContent content={processedDataset.content || ''} />
                       </>

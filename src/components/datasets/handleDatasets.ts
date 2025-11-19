@@ -72,8 +72,8 @@ export function extractDates(content: string): { id: string; text: string }[] {
 }
 
 export function extractContent(content: string): string {
-  if (!content.includes('</h4>')) {
+  if (!content.includes('</h2>')) {
 		return '';
 	}
-  return content.split('</h4>')[1] || '';
+  return content.split('</h2>')[1].trim() || '';
 }
