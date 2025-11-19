@@ -11,18 +11,18 @@ function rehypeCustomTheme() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return (tree: any) => {
     visit(tree, 'element', (node) => {
-      if (node.tagName === 'p') {
-        node.properties = node.properties || {};
-        node.properties.className = ['mb-3', 'max-md:max-w-full'];
-      }
       if (node.tagName === 'a') {
+        const LINK_CLASSES = [
+          'text-[18px]', 'lg:text-[16px]',
+          'font-[Poppins]',
+          'font-semibold',
+          'leading-[24px]', 'lg:leading-[16px]',
+          'text-[rgba(69,82,153,1)]',
+          'underline'
+        ];
         node.properties = node.properties || {};
-        node.properties.className = ['text-[rgba(69,82,153,1)]', 'underline'];
+        node.properties.className = LINK_CLASSES;
         node.properties.target = '_blank';
-      }
-      if (node.tagName === 'ol') {
-        node.properties = node.properties || {};
-        node.properties.className = ['list-decimal', 'list-outside', 'px-5'];
       }
     });
   };
@@ -53,27 +53,22 @@ function extractElements(content: string, regex: RegExp): { id: string; text: st
   return elements;
 }
 
+export function extractSection1Content(content: string): string {
+  if (!content.includes('</h2>')) {
+		return '';
+	}
+  return content.split('</h2>')[1].trim().split('<h2')[0].trim() || '';
+}
+
 export function extractTitles(content: string): { id: string; text: string }[] {
   const regex = /<h2 id="([^"]+)"[^>]*>([^<]+)<\/h2>/g;
 
   return extractElements(content, regex);
 }
 
-export function extractSubtitles(content: string): { id: string; text: string }[] {
-  const regex = /<h3 id="([^"]+)"[^>]*>([^<]+)<\/h3>/g;
-
-  return extractElements(content, regex);
-}
-
-export function extractDates(content: string): { id: string; text: string }[] {
-  const regex = /<h4 id="([^"]+)"[^>]*>([^<]+)<\/h4>/g;
-
-  return extractElements(content, regex);
-}
-
-export function extractContent(content: string): string {
-  if (!content.includes('</h2>')) {
+export function extractSection2Content(content: string): string {
+	if (!content.includes('</h2>')) {
 		return '';
 	}
-  return content.split('</h2>')[1].trim() || '';
+  return content.split('</h2>')[2] || '';
 }
