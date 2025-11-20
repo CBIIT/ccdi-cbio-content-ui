@@ -1,10 +1,10 @@
 # Setup Node
 FROM node:22-alpine3.22 AS base
 
-# # Upgrade npm (pin version for reproducibility; use npm@latest if you prefer)
-# RUN npm install -g npm@latest \
-#   && npm --version \
-#   && npm ls -g glob --depth=0 || true
+# Upgrade npm (pin version for reproducibility; use npm@latest if you prefer)
+RUN npm install -g npm@latest \
+  && npm --version \
+  && npm ls -g glob --depth=0 || true
 
 # Install dependencies
 FROM base AS deps
@@ -15,7 +15,7 @@ RUN apk upgrade openssl
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci && npm audit fix 
+RUN npm ci && npm audit fix
 
 # Rebuild the source code only when needed
 FROM base AS build
