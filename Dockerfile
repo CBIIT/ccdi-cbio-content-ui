@@ -53,6 +53,7 @@ COPY --from=build --chown=nextjs:nodejs /app/.next/static ./.next/static
 
 # Remove npm as it's no longer needed in the runtime image.
 # This is a temporary workaround to eliminate the vulnerability warning (CVE-2025-64756).
+# See reference: https://medium.com/@balazs.csaba.diy/whats-this-glob-npm-madness-suddenly-every-node-js-image-is-vulnerable-but-why-1ba1b0cbad97
 # Once the latest version of npm (> 11.6.3) is released, we can remove this step.
 RUN npm r -g npm
 
