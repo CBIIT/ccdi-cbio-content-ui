@@ -1,10 +1,10 @@
 # Setup Node
 FROM node:22-alpine3.22 AS base
 
-# Upgrade npm (pin version for reproducibility; use npm@latest if you prefer)
-RUN npm install -g npm@latest \
-  && npm --version \
-  && npm ls -g glob --depth=0 || true
+# # Upgrade npm (pin version for reproducibility; use npm@latest if you prefer)
+# RUN npm install -g npm@latest \
+#   && npm --version \
+#   && npm ls -g glob --depth=0 || true
 
 # Install dependencies
 FROM base AS deps
@@ -15,7 +15,7 @@ RUN apk upgrade openssl
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci && npm audit fix 
+RUN npm ci
 
 # Rebuild the source code only when needed
 FROM base AS build
@@ -50,6 +50,13 @@ COPY --from=build /app/public ./public
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=build --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=build --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Remove npm as it's no longer needed in the runtime image.
+# This is a temporary workaround to eliminate the vulnerability warning (CVE-2025-64756).
+# See reference: https://medium.com/@balazs.csaba.diy/whats-this-glob-npm-madness-suddenly-every-node-js-image-is-vulnerable-but-why-1ba1b0cbad97
+# Once the latest version of npm (> 11.6.3) is released, we can remove this step.
+RUN npm r -g npm
+
 # Switch to non-root user
 USER nextjs
 # Expose port
