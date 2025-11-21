@@ -15,7 +15,7 @@ RUN apk upgrade openssl
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci && npm audit fix
+RUN npm ci
 
 # Rebuild the source code only when needed
 FROM base AS build
@@ -50,6 +50,12 @@ COPY --from=build /app/public ./public
 # https://nextjs.org/docs/advanced-features/output-file-tracing
 COPY --from=build --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=build --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Remove npm as it's no longer needed in the runtime image.
+# This is a temporary workaround to eliminate the vulnerability warning (CVE-2025-64756).
+# Once the latest version of npm (> 11.6.3) is released, we can remove this step.
+RUN npm r -g npm
+
 # Switch to non-root user
 USER nextjs
 # Expose port
