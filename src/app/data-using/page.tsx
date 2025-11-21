@@ -119,7 +119,7 @@ const DataUsing: FC = () => {
                 <DataUsingContent content={content} isCitationBox={index === 1 && i === 1} />
                 {index === 0 && (
                   <div className="flex flex-col gap-5 lg:gap-[20px] items-center w-full">
-                    <div className="relative w-full max-w-[335px] min-w-[335px] sm:max-w-[504px] lg:max-w-[656px] xl:max-w-[656px] 2xl:max-w-[656px] h-auto">
+                    <div className="relative w-full max-w-[335px] sm:max-w-[504px] lg:max-w-[656px] xl:max-w-[656px] 2xl:max-w-[656px] h-auto">
                       <div
                         className="relative border border-[#4a8497] border-solid w-full sm:min-w-[504px] sm:min-h-[227px] sm:mx-auto aspect-[647.5/292] overflow-hidden lg:shadow-[2px_6px_15px_0_rgba(0,0,0,0.25)]"
                       >
@@ -137,12 +137,17 @@ const DataUsing: FC = () => {
                         </div>
                       </div>
 
-                      {/* Arrow annotation - responsive positioning */}
+                      {/* Arrow annotation - responsive positioning that scales proportionally with container */}
                       <div
                         className={
                           i === 0
-                            ? 'absolute right-[12.5%] top-[13.5%] sm:right-[17.5%] sm:top-[25%] lg:left-[444.5px] lg:top-[82px] lg:right-auto w-[79.48px] h-[81.931px] sm:w-[79.481px] sm:h-[81.933px] lg:w-[89.5px] lg:h-[92.426px]'
-                            : 'absolute left-[21%] top-[18%] sm:left-[23.5%] sm:top-[29%] lg:left-[167px] lg:top-[97.5px] w-[79.481px] h-[81.933px] sm:w-[79.481px] sm:h-[81.932px] lg:w-[89.5px] lg:h-[92.426px]'
+                            // First arrow: Desktop position left=444.5px (67.8% of 656px), top=82px (28.1% of 292px)
+                            // Arrow width=89.5px (13.6% of 656px container)
+                            // Use percentage-based positioning that scales with container
+                            ? 'absolute right-[18.6%] top-[28.1%] lg:left-[67.8%] lg:top-[28.1%] lg:right-auto w-[13.6%] h-auto aspect-[89.5/92.426]'
+                            // Second arrow: Desktop position left=167px (25.5% of 656px), top=97.5px (33.4% of 292px)
+                            // Arrow width=89.5px (13.6% of 656px container)
+                            : 'absolute left-[25.5%] top-[33.4%] w-[13.6%] h-auto aspect-[89.5/92.426]'
                         }
                       >
                         <div className="relative w-full h-full">
@@ -150,6 +155,8 @@ const DataUsing: FC = () => {
                             src={annotationArrow}
                             alt={i === 0 ? 'Annotation arrow pointing to Clinical Data tab' : 'Annotation arrow pointing to Upload Participants Set'}
                             className="block max-w-none w-full h-full object-contain"
+                            width={90}
+                            height={93}
                           />
                         </div>
                       </div>
