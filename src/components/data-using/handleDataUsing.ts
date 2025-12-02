@@ -20,6 +20,9 @@ function rehypeCustomTheme() {
           'text-[rgba(69,82,153,1)]',
           'underline'
         ];
+        if (node.properties.href.includes('mailto:')) {
+          LINK_CLASSES.push('wrap-break-word');
+        }
         node.properties = node.properties || {};
         node.properties.className = LINK_CLASSES;
         node.properties.target = '_blank';
