@@ -36,8 +36,3 @@ body {
 .about-header-image img {
   height: 214px;
 }
-
-/* Contact section responsive adjustments */
-#about .contact-section a {
-  overflow-wrap: break-word; /* ensure long emails/urls wrap */
-}

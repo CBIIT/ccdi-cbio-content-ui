@@ -10,6 +10,7 @@ import {
   extractTitles,
   extractSection1Content,
   extractSection2Content,
+  extractSection3Content,
 } from '@/components/data-using/handleDataUsing';
 import cBioStudyClinicalData from '../../../assets/data-using/cBioStudyClinicalData.png';
 import ccdiExploreDashboard from '../../../assets/data-using/ccdiExploreDashboard.png';
@@ -27,6 +28,9 @@ interface ProcessedGitHubDataUsing {
   sha?: string;
 }
 
+const HOW_TO = 1;
+const CITING = 2;
+
 const DataUsing: FC = () => {
   const [processedDataUsing, setProcessedDataUsing] = useState<ProcessedGitHubDataUsing | null>(null);
   const [loading, setLoading] = useState(true);
@@ -42,10 +46,11 @@ const DataUsing: FC = () => {
             const titles = extractTitles(fetchedProcessedContent);
             const section1Content = extractSection1Content(fetchedProcessedContent);
             const section2Content = extractSection2Content(fetchedProcessedContent);
+            const section3Content = extractSection3Content(fetchedProcessedContent);
             const formattedDataUsing = {
               ...dataUsingFile,
               titles,
-              contents: [section1Content, section2Content],
+              contents: [section1Content, section2Content, section3Content],
             };
             setProcessedDataUsing(formattedDataUsing);
           }
@@ -114,10 +119,10 @@ const DataUsing: FC = () => {
             {processedDataUsing.contents[index].split('\n').filter(content => content.trim() !== '').map((content, i) => (
               <div
                 key={`${title.id}-${i}`}
-                className={`flex flex-col gap-5 lg:gap-6 items-start max-w-full lg:max-w-[984px] w-full ${index === 0 && i === 0 ? 'mb-[15px]' : ''}`}
+                className={`flex flex-col gap-5 lg:gap-6 items-start max-w-full lg:max-w-[984px] w-full ${index === HOW_TO && i === 0 ? 'mb-[15px]' : ''}`}
               >
-                <DataUsingContent content={content} isCitationBox={index === 1 && i === 1} />
-                {index === 0 && (
+                <DataUsingContent content={content} isCitationBox={index === CITING && i === 1} />
+                {index === HOW_TO && (
                   <div className="flex flex-col gap-5 lg:gap-[20px] items-center w-full">
                     <div className="relative w-full max-w-[335px] sm:max-w-[504px] lg:max-w-[656px] xl:max-w-[656px] 2xl:max-w-[656px] h-auto">
                       <div
