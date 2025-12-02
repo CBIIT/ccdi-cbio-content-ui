@@ -113,7 +113,7 @@ const DataUsing: FC = () => {
             <h2 className="font-[Poppins] font-normal text-[25px] lg:text-[22px] leading-[26px] tracking-[-0.05px] lg:tracking-[-0.044px] text-[#05555c] w-full">
               {title.text}
             </h2>
-            {processedDataUsing.contents[index]?.split('\n').filter(content => content.trim() !== '').map((content, i) => (
+            {processedDataUsing.contents[index].split('\n').filter(content => content.trim() !== '').map((content, i) => (
               <div
                 key={`${title.id}-${i}`}
                 className={`flex flex-col gap-5 lg:gap-6 items-start max-w-full lg:max-w-[984px] w-full ${index === 1 && i === 0 ? 'mb-[15px]' : ''}`}
