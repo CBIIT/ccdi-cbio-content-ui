@@ -77,5 +77,5 @@ export function extractSection3Content(content: string): string {
 	if (!content.includes('</h2>')) {
 		return '';
 	}
-  return content.split('</h2>')[3].trim() || '';
+  return content.split('</h2>')[3].trim().split('<h2')[0].trim() || '';
 }
