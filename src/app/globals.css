@@ -41,3 +41,7 @@ body {
 #about .contact-section a {
   overflow-wrap: break-word; /* ensure long emails/urls wrap */
 }
+/* Data Use Expectations section responsive adjustments */
+#data-using > div.flex.flex-col.gap-5 > div.flex.flex-col.gap-5 > div > p > a {
+  overflow-wrap: break-word; /* ensure long emails/urls wrap */
+}

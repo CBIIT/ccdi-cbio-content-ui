@@ -53,6 +53,12 @@ function extractElements(content: string, regex: RegExp): { id: string; text: st
   return elements;
 }
 
+export function extractTitles(content: string): { id: string; text: string }[] {
+  const regex = /<h2 id="([^"]+)"[^>]*>([^<]+)<\/h2>/g;
+
+  return extractElements(content, regex);
+}
+
 export function extractSection1Content(content: string): string {
   if (!content.includes('</h2>')) {
 		return '';
@@ -60,15 +66,16 @@ export function extractSection1Content(content: string): string {
   return content.split('</h2>')[1].trim().split('<h2')[0].trim() || '';
 }
 
-export function extractTitles(content: string): { id: string; text: string }[] {
-  const regex = /<h2 id="([^"]+)"[^>]*>([^<]+)<\/h2>/g;
-
-  return extractElements(content, regex);
+export function extractSection2Content(content: string): string {
+  if (!content.includes('</h2>')) {
+		return '';
+	}
+  return content.split('</h2>')[2].trim().split('<h2')[0].trim() || '';
 }
 
-export function extractSection2Content(content: string): string {
+export function extractSection3Content(content: string): string {
 	if (!content.includes('</h2>')) {
 		return '';
 	}
-  return content.split('</h2>')[2] || '';
+  return content.split('</h2>')[3] || '';
 }
