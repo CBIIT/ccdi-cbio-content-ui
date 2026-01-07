@@ -13,7 +13,7 @@ function rehypeCustomTheme() {
     visit(tree, 'element', (node) => {
       if (node.tagName === 'p') {
         node.properties = node.properties || {};
-        node.properties.className = ['mb-3', 'max-md:max-w-full'];
+        node.properties.className = ['mt-1', 'mb-4', 'max-md:max-w-full'];
       }
       if (node.tagName === 'a') {
         node.properties = node.properties || {};
@@ -22,7 +22,38 @@ function rehypeCustomTheme() {
       }
       if (node.tagName === 'ol') {
         node.properties = node.properties || {};
-        node.properties.className = ['list-decimal', 'list-outside', 'px-5'];
+        node.properties.className = ['list-decimal', 'list-outside', 'px-5', 'mb-3'];
+      }
+      if (node.tagName === 'ul') {
+        node.properties = node.properties || {};
+        node.properties.className = ['list-disc', 'list-outside', 'px-5', 'mb-3'];
+      }
+      if (node.tagName === 'li') {
+        node.properties = node.properties || {};
+        node.properties.className = ['mb-1'];
+      }
+
+      if (node.tagName === 'h2') {
+        node.properties = node.properties || {};
+        node.properties.className = [
+          'gap-1.5', 'self-stretch', 'my-auto', 'text-lg', 'font-bold', 'leading-none', 'text-sky-800', 'min-w-60', 'w-[641px]', 'max-md:max-w-full'
+        ];
+      }
+
+      if (node.tagName === 'h3') {
+        node.properties = node.properties || {};
+        node.properties.className = [
+          'text-base', 'font-semibold', 'leading-none', 'text-sky-800'
+        ];
+      }
+
+      if (node.tagName === 'h5') {
+        // Convert h5 to h4 for consistency with the updated design (508 compliance)
+        node.tagName = 'h4';
+        node.properties = node.properties || {};
+        node.properties.className = [
+          'mt-2.5', 'text-sm', 'font-semibold', 'leading-none', 'text-sky-800'
+        ];
       }
     });
   };
@@ -40,40 +71,4 @@ export async function processMarkdown(content: string) {
     .process(content);
 
   return result.toString();
-}
-
-function extractElements(content: string, regex: RegExp): { id: string; text: string }[] {
-  const elements: { id: string; text: string }[] = [];
-  let match;
-  
-  while ((match = regex.exec(content)) !== null) {
-    elements.push({ id: match[1], text: match[2] });
-  }
-
-  return elements;
-}
-
-export function extractTitles(content: string): { id: string; text: string }[] {
-  const regex = /<h2 id="([^"]+)"[^>]*>([^<]+)<\/h2>/g;
-
-  return extractElements(content, regex);
-}
-
-export function extractSubtitles(content: string): { id: string; text: string }[] {
-  const regex = /<h3 id="([^"]+)"[^>]*>([^<]+)<\/h3>/g;
-
-  return extractElements(content, regex);
-}
-
-export function extractDates(content: string): { id: string; text: string }[] {
-  const regex = /<h4 id="([^"]+)"[^>]*>([^<]+)<\/h4>/g;
-
-  return extractElements(content, regex);
-}
-
-export function extractContent(content: string): string {
-  if (!content.includes('</h2>')) {
-		return '';
-	}
-  return content.split('</h2>')[1].trim() || '';
 }
