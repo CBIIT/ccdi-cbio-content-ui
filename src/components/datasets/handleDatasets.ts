@@ -32,21 +32,18 @@ function rehypeCustomTheme() {
         node.properties = node.properties || {};
         node.properties.className = ['mb-1'];
       }
-
       if (node.tagName === 'h2') {
         node.properties = node.properties || {};
         node.properties.className = [
           'gap-1.5', 'self-stretch', 'my-auto', 'text-lg', 'font-bold', 'leading-none', 'text-sky-800', 'min-w-60', 'w-[641px]', 'max-md:max-w-full'
         ];
       }
-
       if (node.tagName === 'h3') {
         node.properties = node.properties || {};
         node.properties.className = [
           'text-base', 'font-semibold', 'leading-none', 'text-sky-800'
         ];
       }
-
       if (node.tagName === 'h5') {
         // Convert h5 to h4 for consistency with the updated design (508 compliance)
         node.tagName = 'h4';

@@ -2,26 +2,11 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { fetchReleaseNoteContent } from '@/utilities/data-fetching';
-import { ReleaseNotesHeader } from './ReleaseNotesHeader';
-import { ReleaseNotesContent } from './ReleaseNotesContent';
 import { GitHubRelease } from '@/app/page';
-import {
-  processMarkdown,
-  extractTitles,
-  extractDates,
-  extractContent
-} from './handleReleaseNotes';
+import { processMarkdown } from './handleReleaseNotes';
 
 interface ProcessedGitHubReleaseNotes {
-  titles: {
-    id: string;
-    text: string;
-  }[];
-  dates: {
-    id: string;
-    text: string;
-  }[];
-  content: string;
+  fetchedProcessedContent: string;
   name: string;
   path: string;
   type: string;
@@ -51,16 +36,14 @@ export default function ReleaseNotes({ releases, tier, handleTabClick }: {
               return null;
             }
             const fetchedContent = await fetchReleaseNoteContent(year, slug, tier);
+            const headerContent = fetchedContent.split('</div>')[0];
+            const isHtmlIncluded = !!fetchedContent.split('</div>')[1];
             const fetchedProcessedContent = await processMarkdown(fetchedContent);
-            const titles = extractTitles(fetchedProcessedContent);
-            const dates = extractDates(fetchedProcessedContent);
-            const content = extractContent(fetchedProcessedContent);
-            return {
-              ...releaseNote,
-              titles,
-              dates,
-              content
-            };
+            const combinedContent = isHtmlIncluded
+              ? headerContent + '</div>' + fetchedProcessedContent
+              : fetchedProcessedContent;
+
+            return { ...releaseNote, fetchedProcessedContent: combinedContent };
           })
         );
         setReleaseNotes(formattedReleaseNotes);
@@ -124,13 +107,9 @@ export default function ReleaseNotes({ releases, tier, handleTabClick }: {
                 <article key={releaseNote.sha} className="w-full mb-2.5">
                   <div
                     ref={el => { mainContentRefs.current[index] = el; }}
-                    className="p-2 w-full bg-white rounded border border-solid border-neutral-300"
+                    className="p-2 w-full text-sm font-semibold text-neutral-800 bg-white rounded border border-solid border-neutral-300"
+                    dangerouslySetInnerHTML={{ __html: releaseNote.fetchedProcessedContent }}
                   >
-                    <ReleaseNotesHeader
-                      version={releaseNote.titles[0].text || ''}
-                      date={releaseNote.dates[0].text || ''}
-                    />
-                    <ReleaseNotesContent content={releaseNote.content || ''} />
                   </div>
                 </article>
               );

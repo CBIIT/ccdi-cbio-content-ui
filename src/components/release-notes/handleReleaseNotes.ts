@@ -46,33 +46,3 @@ export async function processMarkdown(content: string) {
 
   return result.toString();
 }
-
-function extractElements(content: string, regex: RegExp): { id: string; text: string }[] {
-  const elements: { id: string; text: string }[] = [];
-  let match;
-  
-  while ((match = regex.exec(content)) !== null) {
-    elements.push({ id: match[1], text: match[2] });
-  }
-
-  return elements;
-}
-
-export function extractTitles(content: string): { id: string; text: string }[] {
-  const regex = /<h2 id="([^"]+)"[^>]*>([^<]+)<\/h2>/g;
-
-  return extractElements(content, regex);
-}
-
-export function extractDates(content: string): { id: string; text: string }[] {
-  const regex = /<h3 id="([^"]+)"[^>]*>([^<]+)<\/h3>/g;
-
-  return extractElements(content, regex);
-}
-
-export function extractContent(content: string): string {
-  if (!content.includes('</h3>')) {
-		return '';
-	}
-  return content.split('</h3>')[1] || '';
-}
