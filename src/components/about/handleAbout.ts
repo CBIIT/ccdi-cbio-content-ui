@@ -58,6 +58,20 @@ function rehypeCustomTheme() {
         node.properties = node.properties || {};
         node.properties.className = LIST_ITEM_CLASSES;
       }
+      if (node.tagName === 'h2') {
+        const TITLE_CLASSES = [
+          'text-[25px]', 'lg:text-[22px]',
+          'font-[Poppins]',
+          'font-normal',
+          'leading-[26px]',
+          'tracking-[-0.05px]', 'lg:tracking-[-0.044px]',
+          'text-[#05555C]',
+          'mt-10', 'lg:mt-15',
+          'mb-2', 'flex', 'items-center'
+        ];
+        node.properties = node.properties || {};
+        node.properties.className = TITLE_CLASSES;
+      }
     });
   };
 }
@@ -74,32 +88,4 @@ export async function processMarkdown(content: string) {
     .process(content);
 
   return result.toString();
-}
-
-function extractElements(content: string, regex: RegExp): { id: string; text: string }[] {
-  const elements: { id: string; text: string }[] = [];
-  let match;
-  
-  while ((match = regex.exec(content)) !== null) {
-    elements.push({ id: match[1], text: match[2] });
-  }
-
-  return elements;
-}
-
-export function extractMainContent(content: string): string {
-  return content.split('<h2')[0];
-}
-
-export function extractTitles(content: string): { id: string; text: string }[] {
-  const regex = /<h2 id="([^"]+)"[^>]*>([^<]+)<\/h2>/g;
-
-  return extractElements(content, regex);
-}
-
-export function extractContactContent(content: string): string {
-	if (!content.includes('</h2>')) {
-		return '';
-	}
-  return content.split('</h2>')[1] || '';
 }

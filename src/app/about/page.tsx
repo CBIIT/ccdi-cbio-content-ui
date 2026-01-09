@@ -4,13 +4,7 @@ import { FC, useState, useEffect, useRef } from 'react';
 import { fetchAboutData } from '@/utilities/data-fetching';
 import { getTierName } from '@/utilities/environment';
 import Image from 'next/image';
-import { AboutContent } from '@/components/about/AboutContent';
-import {
-  processMarkdown,
-  extractTitles,
-  extractMainContent,
-  extractContactContent,
-} from '@/components/about/handleAbout';
+import { processMarkdown } from '@/components/about/handleAbout';
 import headerImg from '../../../assets/about/cBio_About_Header.svg';
 import headerImgMobile from '../../../assets/about/cBio_About_Header_mobile.svg';
 import headerImgTablet from '../../../assets/about/cBio_About_Header_tablet.svg';
@@ -22,12 +16,7 @@ interface GitHubAbout {
 }
 
 interface ProcessedGitHubAbout {
-  titles: {
-    id: string;
-    text: string;
-  }[];
-  mainContent: string;
-  contactContent: string;
+  fetchedProcessedContent: string;
   name: string;
   path: string;
   type: string;
@@ -48,10 +37,7 @@ const About: FC = () => {
           const formattedAbouts = await Promise.all(
             aboutFiles.map(async (fetchedAbout: GitHubAbout) => {
               const fetchedProcessedContent = await processMarkdown(content);
-              const titles = extractTitles(fetchedProcessedContent);
-              const mainContent = extractMainContent(fetchedProcessedContent);
-              const contactContent = extractContactContent(fetchedProcessedContent);
-              return { ...fetchedAbout, titles, mainContent, contactContent };
+              return { ...fetchedAbout, fetchedProcessedContent };
             })
           );
           setProcessedAbouts(formattedAbouts);
@@ -124,24 +110,11 @@ const About: FC = () => {
           <div className="prose prose-lg max-w-none">
             {processedAbouts.length > 0 && processedAbouts.map(processedAbout => (
               <div key={processedAbout.sha}>
-                <AboutContent content={processedAbout.mainContent} />
-                <h2
-                  className="
-                    text-[25px] lg:text-[22px]
-                    font-[Poppins]
-                    font-normal
-                    leading-[26px]
-                    tracking-[-0.05px] lg:tracking-[-0.044px]
-                    text-[#05555C]
-                    mt-10 lg:mt-15
-                    mb-2 flex items-center
-                  "
+                <section
+                  className="pt-0.5 mt-1 w-full text-sm font-semibold leading-5 text-neutral-800 max-md:max-w-full"
+                  dangerouslySetInnerHTML={{ __html: processedAbout.fetchedProcessedContent }}
                 >
-                  {processedAbout.titles[0].text}
-                </h2>
-                <div className="contact-section">
-                  <AboutContent content={processedAbout.contactContent} />
-                </div>
+                </section>
               </div>
             ))}
           </div>
