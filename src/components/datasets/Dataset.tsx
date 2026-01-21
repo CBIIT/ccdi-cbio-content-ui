@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { fetchDatasetContent } from '@/utilities/data-fetching';
-import { GitHubDataset } from '@/app/page';
+import { fetchContent } from '@/utilities/data-fetching';
+import { GitHubDataset } from '@/utilities/configs';
 
 import { processMarkdown } from './handleDatasets';
 
@@ -14,7 +14,7 @@ interface ProcessedGitHubDataset {
   sha?: string;
 }
 
-export default function DataAccessCards({ datasets, tier }: { datasets: GitHubDataset[], tier: string }) {
+export default function DataAccessCards({ datasets }: { datasets: GitHubDataset[] }) {
   const [processedDatasets, setProcessedDatasets] = useState<(ProcessedGitHubDataset | null)[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,7 +27,7 @@ export default function DataAccessCards({ datasets, tier }: { datasets: GitHubDa
             if (!slug) {
               return null;
             }
-            const fetchedContent = await fetchDatasetContent(slug, tier);
+            const fetchedContent = await fetchContent(`datasets/${slug}.md`);
             const fetchedProcessedContent = await processMarkdown(fetchedContent);
             return { ...dataset, fetchedProcessedContent };
           })

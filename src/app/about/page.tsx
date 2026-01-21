@@ -1,51 +1,31 @@
 'use client';
 
 import { FC, useState, useEffect, useRef } from 'react';
-import { fetchAboutData } from '@/utilities/data-fetching';
-import { getTierName } from '@/utilities/environment';
+import { fetchContent } from '@/utilities/data-fetching';
 import Image from 'next/image';
 import { processMarkdown } from '@/components/about/handleAbout';
 import headerImg from '../../../assets/about/cBio_About_Header.svg';
 import headerImgMobile from '../../../assets/about/cBio_About_Header_mobile.svg';
 import headerImgTablet from '../../../assets/about/cBio_About_Header_tablet.svg';
 
-interface GitHubAbout {
-  name: string;
-  path: string;
-  type: string;
-}
-
-interface ProcessedGitHubAbout {
-  fetchedProcessedContent: string;
-  name: string;
-  path: string;
-  type: string;
-  sha?: string;
-}
+type ProcessedGitHubAbout = string;
 
 const About: FC = () => {
-  const [processedAbouts, setProcessedAbouts] = useState<ProcessedGitHubAbout[]>([]);
+  const [processedAbout, setProcessedAbout] = useState<ProcessedGitHubAbout>('');
   const [loading, setLoading] = useState(true);
 
   const mainContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const loadData = async () => {
-      if (typeof window !== 'undefined') {
-        try {
-          const { aboutFiles, content } = await fetchAboutData(getTierName(window.location.hostname));
-          const formattedAbouts = await Promise.all(
-            aboutFiles.map(async (fetchedAbout: GitHubAbout) => {
-              const fetchedProcessedContent = await processMarkdown(content);
-              return { ...fetchedAbout, fetchedProcessedContent };
-            })
-          );
-          setProcessedAbouts(formattedAbouts);
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setLoading(false);
-        }
+      try {
+        const aboutContent = await fetchContent('about/about.md');
+        const formattedAbout = await processMarkdown(aboutContent);
+        setProcessedAbout(formattedAbout);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -108,15 +88,13 @@ const About: FC = () => {
       <section id="about" className="pt-10 pb-1 bg-white">
         <div className="container lg:mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
           <div className="prose prose-lg max-w-none">
-            {processedAbouts.length > 0 && processedAbouts.map(processedAbout => (
-              <div key={processedAbout.sha}>
-                <section
-                  className="pt-0.5 mt-1 w-full text-sm font-semibold leading-5 text-neutral-800 max-md:max-w-full"
-                  dangerouslySetInnerHTML={{ __html: processedAbout.fetchedProcessedContent }}
-                >
-                </section>
-              </div>
-            ))}
+            {processedAbout && (
+              <section
+                className="pt-0.5 mt-1 w-full text-sm font-semibold leading-5 text-neutral-800 max-md:max-w-full"
+                dangerouslySetInnerHTML={{ __html: processedAbout }}
+              >
+              </section>
+            )}
           </div>
         </div>
       </section>

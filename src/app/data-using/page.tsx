@@ -1,38 +1,27 @@
 'use client';
 
 import { FC, useState, useEffect, useRef } from 'react';
-import { fetchDataUsingData } from '@/utilities/data-fetching';
-import { getTierName } from '@/utilities/environment';
+import { fetchContent } from '@/utilities/data-fetching';
 import { processMarkdown } from '@/components/data-using/handleDataUsing';
 
-interface ProcessedGitHubDataUsing {
-  fetchedProcessedContent: string;
-  name: string;
-  path: string;
-  type: string;
-  sha?: string;
-}
+type ProcessedGitHubDataUsing = string;
 
 const DataUsing: FC = () => {
-  const [processedDataUsing, setProcessedDataUsing] = useState<ProcessedGitHubDataUsing | null>(null);
+  const [processedDataUsing, setProcessedDataUsing] = useState<ProcessedGitHubDataUsing>('');
   const [loading, setLoading] = useState(true);
+
   const mainContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const loadData = async () => {
-      if (typeof window !== 'undefined') {
-        try {
-          const { dataUsingFile, content } = await fetchDataUsingData(getTierName(window.location.hostname));
-          if (dataUsingFile) {
-            const fetchedProcessedContent = await processMarkdown(content);
-            const formattedDataUsing = { ...dataUsingFile, fetchedProcessedContent };
-            setProcessedDataUsing(formattedDataUsing);
-          }
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setLoading(false);
-        }
+      try {
+        const dataUsingContent = await fetchContent('data-using/data_using.md');
+        const formattedDataUsing = await processMarkdown(dataUsingContent);
+        setProcessedDataUsing(formattedDataUsing);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -89,7 +78,7 @@ const DataUsing: FC = () => {
             w-full max-w-full max-w-[1420px]
             px-5 sm:px-[25px] lg:px-8 pt-4 lg:pt-1
           "
-          dangerouslySetInnerHTML={{ __html: processedDataUsing.fetchedProcessedContent }}
+          dangerouslySetInnerHTML={{ __html: processedDataUsing }}
         ></div>
       )}
     </main>

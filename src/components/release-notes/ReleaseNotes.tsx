@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { fetchReleaseNoteContent } from '@/utilities/data-fetching';
-import { GitHubRelease } from '@/app/page';
+import { fetchContent } from '@/utilities/data-fetching';
+import { GitHubRelease } from '@/utilities/configs';
 import { processMarkdown } from './handleReleaseNotes';
 
 interface ProcessedGitHubReleaseNotes {
@@ -13,9 +13,8 @@ interface ProcessedGitHubReleaseNotes {
   sha?: string;
 }
 
-export default function ReleaseNotes({ releases, tier, handleTabClick }: {
+export default function ReleaseNotes({ releases, handleTabClick }: {
   releases: GitHubRelease[],
-  tier: string,
   handleTabClick: (tabId: string) => void
 }) {
   const flattenedReleasesWithReleaseNotes = releases.map(release => release.releaseNotes).flat();
@@ -35,7 +34,7 @@ export default function ReleaseNotes({ releases, tier, handleTabClick }: {
             if (!year || !slug) {
               return null;
             }
-            const fetchedContent = await fetchReleaseNoteContent(year, slug, tier);
+            const fetchedContent = await fetchContent(`releases/${year}/${slug}.md`);
             const headerContent = fetchedContent.split('</div>')[0];
             const isHtmlIncluded = !!fetchedContent.split('</div>')[1];
             const fetchedProcessedContent = await processMarkdown(fetchedContent);

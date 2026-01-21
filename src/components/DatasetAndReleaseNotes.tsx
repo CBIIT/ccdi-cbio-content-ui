@@ -4,7 +4,7 @@ import { useState, FC, KeyboardEvent, useEffect, useRef } from 'react';
 import { TabItem } from './TabItem';
 import ReleaseNotes from './release-notes/ReleaseNotes';
 import Dataset from './datasets/Dataset';
-import { GitHubRelease, GitHubDataset } from '@/app/page';
+import { GitHubRelease, GitHubDataset } from '@/utilities/configs';
 
 const tabs = [
   {
@@ -17,7 +17,7 @@ const tabs = [
   }
 ];
 
-const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDataset[], tier: string }> = ({ releases, datasets, tier }) => {
+const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDataset[] }> = ({ releases, datasets }) => {
   const [activeTabId, setActiveTabId] = useState(tabs[0].id);
 
   const mainContentRef = useRef<HTMLDivElement>(null);
@@ -80,8 +80,8 @@ const DatasetAndReleaseNotes: FC<{ releases: GitHubRelease[], datasets: GitHubDa
         </div>
       </section>
       <section>
-        {activeTabId === tabs[0].id && <ReleaseNotes releases={releases} tier={tier} handleTabClick={handleTabClick} />}
-        {activeTabId === tabs[1].id && <Dataset datasets={datasets} tier={tier} />}
+        {activeTabId === tabs[0].id && <ReleaseNotes releases={releases} handleTabClick={handleTabClick} />}
+        {activeTabId === tabs[1].id && <Dataset datasets={datasets} />}
       </section>
     </div>
   );

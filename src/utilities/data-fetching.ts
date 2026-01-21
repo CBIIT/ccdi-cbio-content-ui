@@ -1,23 +1,12 @@
-function getValidatedToken() {
-  const token = process.env.NEXT_PUBLIC_CONTENT_API_TOKEN;
-  if (!token) {
-    throw new Error('NEXT_PUBLIC_CONTENT_API_TOKEN is not configured');
-  }
-  return token;
-}
+import { getBranchName } from './configs';
 
-async function fetchGitHubData(tier: string = 'dev') {
-  const token = getValidatedToken();
-
+async function fetchGitHubData() {
   try {
     // Fetch releases
     const releasesResponse = await fetch(
-      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases${tier === 'prod' ? '' : `?ref=${tier}`}`,
+      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases${getBranchName() === 'main' ? '' : `?ref=${getBranchName()}`}`,
       {
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: { 'Accept': 'application/vnd.github.v3+json' },
         next: { revalidate: 3600 }
       }
     );
@@ -34,12 +23,9 @@ async function fetchGitHubData(tier: string = 'dev') {
       releases.map(async (release: { name: string }) => {
         const year = release.name;
         const releaseNotesResponse = await fetch(
-          `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}${tier === 'prod' ? '' : `?ref=${tier}`}`,
+          `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}${getBranchName() === 'main' ? '' : `?ref=${getBranchName()}`}`,
           {
-            headers: {
-              'Accept': 'application/vnd.github.v3+json',
-              'Authorization': `Bearer ${token}`
-            },
+            headers: { 'Accept': 'application/vnd.github.v3+json' },
             next: { revalidate: 3600 }
           }
         );
@@ -60,12 +46,9 @@ async function fetchGitHubData(tier: string = 'dev') {
 
     // Fetch datasets
     const datasetsResponse = await fetch(
-      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets${tier === 'prod' ? '' : `?ref=${tier}`}`,
+      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets${getBranchName() === 'main' ? '' : `?ref=${getBranchName()}`}`,
       {
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-          'Authorization': `Bearer ${token}`
-        },
+        headers: { 'Accept': 'application/vnd.github.v3+json' },
         next: { revalidate: 3600 }
       }
     );
@@ -87,162 +70,17 @@ async function fetchGitHubData(tier: string = 'dev') {
   }
 }
 
-async function fetchAboutData(tier: string = 'dev') {
-  const token = getValidatedToken();
+const BASE_URL = `https://raw.githubusercontent.com/CBIIT/ccdi-cbio-content/refs/heads/${getBranchName()}/`;
 
-  try {
-    const response = await fetch(
-      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/about${tier === 'prod' ? '' : `?ref=${tier}`}`,
-      {
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-          'Authorization': `Bearer ${token}`
-        },
-        next: { revalidate: 3600 }
-      }
-    );
+async function fetchContent(filePath: string) {
+  const response = await fetch(`${BASE_URL}${filePath}`);
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch about files');
-    }
-
-    const aboutFiles = await response.json();
-    const aboutFile = aboutFiles.find((file: { name: string }) => file.name === 'about.md');
-    
-    if (aboutFile) {
-      const contentResponse = await fetch(
-        `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/about/about.md${tier === 'prod' ? '' : `?ref=${tier}`}`,
-        {
-          headers: {
-            'Accept': 'application/vnd.github.v3.raw',
-            'Authorization': `Bearer ${token}`
-          },
-          next: { revalidate: 3600 }
-        }
-      );
-
-      if (!contentResponse.ok) {
-        throw new Error('Failed to fetch about content');
-      }
-
-      const content = await contentResponse.text();
-      return { aboutFiles: [aboutFile], content };
-    }
-
-    return { aboutFiles: [], content: '' };
-  } catch (error) {
-    console.error('Error fetching about data:', error);
-    throw error;
+  if (!response.ok) {
+    throw new Error(`Failed to fetch content from ${filePath}`);
   }
+
+  const content = await response.text();
+  return content;
 }
 
-async function fetchDataUsingData(tier: string = 'dev') {
-  const token = getValidatedToken();
-
-  try {
-    const response = await fetch(
-      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/data-using${tier === 'prod' ? '' : `?ref=${tier}`}`,
-      {
-        headers: {
-          'Accept': 'application/vnd.github.v3+json',
-          'Authorization': `Bearer ${token}`
-        },
-        next: { revalidate: 3600 }
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch data using files');
-    }
-
-    const dataUsingFiles = await response.json();
-    const dataUsingFile = dataUsingFiles.find((file: { name: string }) => file.name === 'data_using.md');
-    
-    if (dataUsingFile) {
-      const contentResponse = await fetch(
-        `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/data-using/data_using.md${tier === 'prod' ? '' : `?ref=${tier}`}`,
-        {
-          headers: {
-            'Accept': 'application/vnd.github.v3.raw',
-            'Authorization': `Bearer ${token}`
-          },
-          next: { revalidate: 3600 }
-        }
-      );
-
-      if (!contentResponse.ok) {
-        throw new Error('Failed to fetch data using content');
-      }
-
-      const content = await contentResponse.text();
-      return { dataUsingFile, content };
-    }
-
-    return { dataUsingFile: null, content: '' };
-  } catch (error) {
-    console.error('Error fetching data using data:', error);
-    throw error;
-  }
-}
-
-async function fetchReleaseNoteContent(year: string, slug: string, tier: string = 'dev') {
-  const token = getValidatedToken();
-
-  try {
-    const response = await fetch(
-      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/releases/${year}/${slug}.md${tier === 'prod' ? '' : `?ref=${tier}`}`,
-      {
-        headers: {
-          'Accept': 'application/vnd.github.v3.raw',
-          'Authorization': `Bearer ${token}`
-        },
-        next: { revalidate: 3600 }
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch release note content');
-    }
-
-    const content = await response.text();
-    return content;
-  } catch (error) {
-    console.error('Error fetching release note content:', error);
-    throw error;
-  }
-}
-
-async function fetchDatasetContent(slug: string, tier: string = 'dev') {
-  const token = getValidatedToken();
-
-  try {
-    const response = await fetch(
-      `https://api.github.com/repos/CBIIT/ccdi-cbio-content/contents/datasets/${slug}.md${tier === 'prod' ? '' : `?ref=${tier}`}`,
-      {
-        headers: {
-          'Accept': 'application/vnd.github.v3.raw',
-          'Authorization': `Bearer ${token}`
-        },
-        next: { revalidate: 3600 }
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch dataset content');
-    }
-
-    const content = await response.text();
-    return content;
-  } catch (error) {
-    console.error('Error fetching dataset content:', error);
-    throw error;
-  }
-}
-
-export { 
-  fetchGitHubData, 
-  fetchAboutData, 
-  fetchDataUsingData,
-  fetchReleaseNoteContent, 
-  fetchDatasetContent 
-};
+export { fetchGitHubData, fetchContent };
