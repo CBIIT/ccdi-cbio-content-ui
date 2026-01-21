@@ -53,7 +53,6 @@ function rehypeCustomTheme() {
         node.properties.className = LINK_CLASSES;
       }
       if (node.tagName === 'img') {
-        console.log(node);
         const LINK_CLASSES = [
           'border', 'border-[#4a8497]', 'border-solid',
           'mx-auto', 'w-full', 'sm:min-h-[227px]',
