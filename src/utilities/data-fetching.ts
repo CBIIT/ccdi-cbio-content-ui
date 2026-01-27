@@ -4,7 +4,7 @@ const BASE_URL = `https://raw.githubusercontent.com/CBIIT/ccdi-cbio-content/refs
 
 export async function fetchContent(filePath: string) {
   const response = await fetch(`${BASE_URL}${filePath}`, {
-    headers: { 'Accept': 'application/json' },
+    headers: { 'Accept': 'text/plain' },
     next: { revalidate: 3600 }  // Next.js specific - for Incremental Static Regeneration (ISR)
   });
 

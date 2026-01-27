@@ -33,7 +33,7 @@ function rehypeCustomTheme() {
         const LINK_CLASSES = [
           'mb-5', 'lg:mb-6', 'w-full'
         ];
-        if (node.children[0].tagName === 'em') {
+        if (Array.isArray(node.children) && node.children[0]?.tagName === 'em') {
           LINK_CLASSES.push(
             'flex', 'items-start', 'justify-center',
             'px-4', 'sm:px-6', 'lg:px-[50px]', 'py-0',
