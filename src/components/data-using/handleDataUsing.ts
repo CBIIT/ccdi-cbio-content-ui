@@ -6,6 +6,7 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeSlug from 'rehype-slug';
 import rehypeStringify from 'rehype-stringify';
 import { visit } from 'unist-util-visit';
+import { getBranchName } from '@/utilities/configs';
 
 function rehypeCustomTheme() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -53,6 +54,10 @@ function rehypeCustomTheme() {
         node.properties.className = LINK_CLASSES;
       }
       if (node.tagName === 'img') {
+        const srcUrl = node.properties.src.split('/');
+        // Replace the branch name with the correct one
+        srcUrl.splice(5, 1, getBranchName());
+        node.properties.src = srcUrl.join('/');
         const LINK_CLASSES = [
           'border', 'border-[#4a8497]', 'border-solid',
           'mx-auto', 'w-full', 'sm:min-h-[227px]',

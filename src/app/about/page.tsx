@@ -2,16 +2,24 @@
 
 import { FC, useState, useEffect, useRef } from 'react';
 import { fetchContent } from '@/utilities/data-fetching';
+import modules from '@/utilities/modules.json';
 import Image from 'next/image';
 import { processMarkdown } from '@/components/about/handleAbout';
 import headerImg from '../../../assets/about/cBio_About_Header.svg';
 import headerImgMobile from '../../../assets/about/cBio_About_Header_mobile.svg';
 import headerImgTablet from '../../../assets/about/cBio_About_Header_tablet.svg';
 
-type ProcessedGitHubAbout = string;
+type ProcessedAboutModule = {
+  fetchedProcessedContent: string;
+  title: string;
+  id: string;
+  path: string;
+};
+
+const aboutModules = modules.about;
 
 const About: FC = () => {
-  const [processedAbout, setProcessedAbout] = useState<ProcessedGitHubAbout>('');
+  const [processedAbouts, setProcessedAbouts] = useState<ProcessedAboutModule[]>([]);
   const [loading, setLoading] = useState(true);
 
   const mainContentRef = useRef<HTMLDivElement>(null);
@@ -19,9 +27,14 @@ const About: FC = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const aboutContent = await fetchContent('about/about.md');
-        const formattedAbout = await processMarkdown(aboutContent);
-        setProcessedAbout(formattedAbout);
+        const formattedAbouts = await Promise.all(
+          aboutModules.map(async module => {
+            const fetchedContent = await fetchContent(module.path);
+            const fetchedProcessedContent = await processMarkdown(fetchedContent);
+            return { ...module, fetchedProcessedContent };
+          })
+        );
+        setProcessedAbouts(formattedAbouts);
       } catch (error) {
         console.error(error);
       } finally {
@@ -88,13 +101,17 @@ const About: FC = () => {
       <section id="about" className="pt-10 pb-1 bg-white">
         <div className="container lg:mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
           <div className="prose prose-lg max-w-none">
-            {processedAbout && (
-              <section
-                className="pt-0.5 mt-1 w-full text-sm font-semibold leading-5 text-neutral-800 max-md:max-w-full"
-                dangerouslySetInnerHTML={{ __html: processedAbout }}
-              >
-              </section>
-            )}
+            {processedAbouts.length > 0 && processedAbouts.map(processedAbout => {
+              if (!processedAbout) return null;
+              return (
+                <section
+                  key={processedAbout.id}
+                  className="pt-0.5 mt-1 w-full text-sm font-semibold leading-5 text-neutral-800 max-md:max-w-full"
+                  dangerouslySetInnerHTML={{ __html: processedAbout.fetchedProcessedContent }}
+                >
+                </section>
+              );
+            })}
           </div>
         </div>
       </section>

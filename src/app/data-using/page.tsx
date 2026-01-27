@@ -2,12 +2,20 @@
 
 import { FC, useState, useEffect, useRef } from 'react';
 import { fetchContent } from '@/utilities/data-fetching';
+import modules from '@/utilities/modules.json';
 import { processMarkdown } from '@/components/data-using/handleDataUsing';
 
-type ProcessedGitHubDataUsing = string;
+type ProcessedDataUsingModule = {
+  fetchedProcessedContent: string;
+  title: string;
+  id: string;
+  path: string;
+};
+
+const dataUsingModules = modules['data-using'];
 
 const DataUsing: FC = () => {
-  const [processedDataUsing, setProcessedDataUsing] = useState<ProcessedGitHubDataUsing>('');
+  const [processedDataUsings, setProcessedDataUsings] = useState<ProcessedDataUsingModule[]>([]);
   const [loading, setLoading] = useState(true);
 
   const mainContentRef = useRef<HTMLDivElement>(null);
@@ -15,9 +23,14 @@ const DataUsing: FC = () => {
   useEffect(() => {
     const loadData = async () => {
       try {
-        const dataUsingContent = await fetchContent('data-using/data_using.md');
-        const formattedDataUsing = await processMarkdown(dataUsingContent);
-        setProcessedDataUsing(formattedDataUsing);
+        const formattedDataUsings = await Promise.all(
+          dataUsingModules.map(async module => {
+            const fetchedContent = await fetchContent(module.path);
+            const fetchedProcessedContent = await processMarkdown(fetchedContent);
+            return { ...module, fetchedProcessedContent };
+          })
+        );
+        setProcessedDataUsings(formattedDataUsings);
       } catch (error) {
         console.error(error);
       } finally {
@@ -68,19 +81,23 @@ const DataUsing: FC = () => {
         </h1>
       </div>
 
-      {processedDataUsing && (
-        <div
-          className="
-            flex flex-col justify-center items-center
-            font-[Inter] font-medium
-            text-[18px] lg:text-[16px] text-black
-            leading-[24px] lg:leading-[22px]
-            w-full max-w-full max-w-[1420px]
-            px-5 sm:px-[25px] lg:px-8 pt-4 lg:pt-1
-          "
-          dangerouslySetInnerHTML={{ __html: processedDataUsing }}
-        ></div>
-      )}
+      {processedDataUsings.length > 0 && processedDataUsings.map(processedDataUsing => {
+        if (!processedDataUsing) return null;
+        return (
+          <div
+            key={processedDataUsing.id}
+            className="
+              flex flex-col justify-center items-center
+              font-[Inter] font-medium
+              text-[18px] lg:text-[16px] text-black
+              leading-[24px] lg:leading-[22px]
+              w-full max-w-full max-w-[1420px]
+              px-5 sm:px-[25px] lg:px-8 pt-4 lg:pt-1
+            "
+            dangerouslySetInnerHTML={{ __html: processedDataUsing.fetchedProcessedContent }}
+          ></div>
+        );
+      })}
     </main>
   );
 };

@@ -1,22 +1,3 @@
-interface GitHubRelease {
-  name: string;
-  path: string;
-  type: string;
-  releaseNotes?: GitHubReleaseNote[];
-}
-
-interface GitHubReleaseNote {
-  name: string;
-  path: string;
-  type: string;
-}
-
-interface GitHubDataset {
-  name: string;
-  path: string;
-  type: string;
-}
-
 function getBranchName() {
   if (typeof window !== 'undefined') {
     const hostname = window.location.hostname;
@@ -41,5 +22,4 @@ function getBranchName() {
   return 'main';
 }
 
-export type { GitHubRelease, GitHubDataset };
 export { getBranchName };

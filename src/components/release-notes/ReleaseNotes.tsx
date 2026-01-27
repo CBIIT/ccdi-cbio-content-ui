@@ -2,23 +2,22 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { fetchContent } from '@/utilities/data-fetching';
-import { GitHubRelease } from '@/utilities/configs';
+import modules from '@/utilities/modules.json';
 import { processMarkdown } from './handleReleaseNotes';
 
-interface ProcessedGitHubReleaseNotes {
+type ProcessedReleaseNotesModule = {
   fetchedProcessedContent: string;
-  name: string;
+  title: string;
+  id: string;
   path: string;
-  type: string;
-  sha?: string;
-}
+};
 
-export default function ReleaseNotes({ releases, handleTabClick }: {
-  releases: GitHubRelease[],
+const releaseNotesModules = Object.values(modules.releases).flat().reverse();
+
+export default function ReleaseNotes({ handleTabClick }: {
   handleTabClick: (tabId: string) => void
 }) {
-  const flattenedReleasesWithReleaseNotes = releases.map(release => release.releaseNotes).flat();
-  const [releaseNotes, setReleaseNotes] = useState<(ProcessedGitHubReleaseNotes | null)[]>([]);
+  const [releaseNotes, setReleaseNotes] = useState<ProcessedReleaseNotesModule[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Dynamic refs: one per rendered release note container
@@ -28,13 +27,9 @@ export default function ReleaseNotes({ releases, handleTabClick }: {
     const loadData = async () => {
       try {
         const formattedReleaseNotes = await Promise.all(
-          flattenedReleasesWithReleaseNotes.map(async releaseNote => {
-            const year = releaseNote?.path.split('/')[1];
-            const slug = releaseNote?.name.replace('.md', '');
-            if (!year || !slug) {
-              return null;
-            }
-            const fetchedContent = await fetchContent(`releases/${year}/${slug}.md`);
+          releaseNotesModules.map(async module => {
+            console.log(module.id)
+            const fetchedContent = await fetchContent(module.path);
             const headerContent = fetchedContent.split('</div>')[0];
             const isHtmlIncluded = !!fetchedContent.split('</div>')[1];
             const fetchedProcessedContent = await processMarkdown(fetchedContent);
@@ -42,7 +37,7 @@ export default function ReleaseNotes({ releases, handleTabClick }: {
               ? headerContent + '</div>' + fetchedProcessedContent
               : fetchedProcessedContent;
 
-            return { ...releaseNote, fetchedProcessedContent: combinedContent };
+            return { ...module, fetchedProcessedContent: combinedContent };
           })
         );
         setReleaseNotes(formattedReleaseNotes);
@@ -103,7 +98,7 @@ export default function ReleaseNotes({ releases, handleTabClick }: {
             {releaseNotes.length > 0 && releaseNotes.map((releaseNote, index) => {
               if (!releaseNote) return null;
               return (
-                <article key={releaseNote.sha} className="w-full mb-2.5">
+                <article key={releaseNote.id} className="w-full mb-2.5">
                   <div
                     ref={el => { mainContentRefs.current[index] = el; }}
                     className="p-2 w-full text-sm font-semibold text-neutral-800 bg-white rounded border border-solid border-neutral-300"

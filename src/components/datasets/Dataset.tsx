@@ -2,34 +2,31 @@
 
 import { useState, useEffect } from 'react';
 import { fetchContent } from '@/utilities/data-fetching';
-import { GitHubDataset } from '@/utilities/configs';
+import modules from '@/utilities/modules.json';
 
 import { processMarkdown } from './handleDatasets';
 
-interface ProcessedGitHubDataset {
+const datasetsModules = modules.datasets;
+
+interface ProcessedDatasetsModule {
   fetchedProcessedContent: string,
-  name: string;
+  title: string;
+  id: string;
   path: string;
-  type: string;
-  sha?: string;
 }
 
-export default function DataAccessCards({ datasets }: { datasets: GitHubDataset[] }) {
-  const [processedDatasets, setProcessedDatasets] = useState<(ProcessedGitHubDataset | null)[]>([]);
+export default function DataAccessCards() {
+  const [processedDatasets, setProcessedDatasets] = useState<ProcessedDatasetsModule[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
       try {
         const formattedDatasets = await Promise.all(
-          datasets.map(async dataset => {
-            const slug = dataset?.name.replace('.md', '');
-            if (!slug) {
-              return null;
-            }
-            const fetchedContent = await fetchContent(`datasets/${slug}.md`);
+          datasetsModules.map(async module => {
+            const fetchedContent = await fetchContent(module.path);
             const fetchedProcessedContent = await processMarkdown(fetchedContent);
-            return { ...dataset, fetchedProcessedContent };
+            return { ...module, fetchedProcessedContent };
           })
         );
         setProcessedDatasets(formattedDatasets);
@@ -57,7 +54,7 @@ export default function DataAccessCards({ datasets }: { datasets: GitHubDataset[
                 if (!processedDataset) return null;
                 return (
                   <article
-                    key={processedDataset.sha}
+                    key={processedDataset.id}
                     className="overflow-hidden mb-2.5 p-2 w-full bg-white rounded border border-solid border-neutral-300"
                   >
                     <section
