@@ -40,6 +40,14 @@ export async function fetchModules(options?: { branchName?: string }): Promise<M
     return JSON.parse(raw) as ModulesConfig;
   } catch (error) {
     console.error('Failed to fetch modules:', error);
-    return {} as ModulesConfig;
+    return {
+      about: [],
+      'data-using': [],
+      datasets: [],
+      releases: {
+        2025: []
+      },
+      images: []
+    } as ModulesConfig;
   }
 }
