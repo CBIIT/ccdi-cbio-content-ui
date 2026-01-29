@@ -92,7 +92,7 @@ const DataUsing: FC = () => {
               font-[Inter] font-medium
               text-[18px] lg:text-[16px] text-black
               leading-[24px] lg:leading-[22px]
-              w-full max-w-full max-w-[1420px]
+              w-full max-w-[1420px]
               px-5 sm:px-[25px] lg:px-8 pt-4 lg:pt-1
             "
             dangerouslySetInnerHTML={{ __html: processedDataUsing.fetchedProcessedContent }}
