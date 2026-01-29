@@ -2,7 +2,7 @@
 
 import { FC, useState, useEffect, useRef } from 'react';
 import { fetchContent } from '@/utilities/data-fetching';
-import modules from '@/utilities/modules.json';
+import { useModules } from '@/components/modules/ModulesProvider';
 import { processMarkdown } from '@/components/data-using/handleDataUsing';
 
 type ProcessedDataUsingModule = {
@@ -12,9 +12,9 @@ type ProcessedDataUsingModule = {
   path: string;
 };
 
-const dataUsingModules = modules['data-using'];
-
 const DataUsing: FC = () => {
+  const modules = useModules();
+  const dataUsingModules = modules['data-using'];
   const [processedDataUsings, setProcessedDataUsings] = useState<ProcessedDataUsingModule[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,6 +22,7 @@ const DataUsing: FC = () => {
 
   useEffect(() => {
     const loadData = async () => {
+      setLoading(true);
       try {
         const formattedDataUsings = await Promise.all(
           dataUsingModules.map(async module => {
@@ -39,7 +40,7 @@ const DataUsing: FC = () => {
     };
 
     loadData();
-  }, []);
+  }, [dataUsingModules]);
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {

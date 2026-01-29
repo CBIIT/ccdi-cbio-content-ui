@@ -2,11 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import { fetchContent } from '@/utilities/data-fetching';
-import modules from '@/utilities/modules.json';
+import { useModules } from '@/components/modules/ModulesProvider';
 
 import { processMarkdown } from './handleDatasets';
-
-const datasetsModules = modules.datasets;
 
 interface ProcessedDatasetsModule {
   fetchedProcessedContent: string,
@@ -16,11 +14,13 @@ interface ProcessedDatasetsModule {
 }
 
 export default function DataAccessCards() {
+  const { datasets: datasetsModules } = useModules();
   const [processedDatasets, setProcessedDatasets] = useState<ProcessedDatasetsModule[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
+      setLoading(true);
       try {
         const formattedDatasets = await Promise.all(
           datasetsModules.map(async module => {
@@ -38,7 +38,7 @@ export default function DataAccessCards() {
     };
 
     loadData();
-  }, []);
+  }, [datasetsModules]);
 
   if (loading) {
     return <div>Loading...</div>;

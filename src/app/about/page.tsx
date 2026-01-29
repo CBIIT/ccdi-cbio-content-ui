@@ -2,7 +2,7 @@
 
 import { FC, useState, useEffect, useRef } from 'react';
 import { fetchContent } from '@/utilities/data-fetching';
-import modules from '@/utilities/modules.json';
+import { useModules } from '@/components/modules/ModulesProvider';
 import Image from 'next/image';
 import { processMarkdown } from '@/components/about/handleAbout';
 import headerImg from '../../../assets/about/cBio_About_Header.svg';
@@ -16,9 +16,8 @@ type ProcessedAboutModule = {
   path: string;
 };
 
-const aboutModules = modules.about;
-
 const About: FC = () => {
+  const { about: aboutModules } = useModules();
   const [processedAbouts, setProcessedAbouts] = useState<ProcessedAboutModule[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -26,6 +25,7 @@ const About: FC = () => {
 
   useEffect(() => {
     const loadData = async () => {
+      setLoading(true);
       try {
         const formattedAbouts = await Promise.all(
           aboutModules.map(async module => {
@@ -43,7 +43,7 @@ const About: FC = () => {
     };
 
     loadData();
-  }, []);
+  }, [aboutModules]);
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {

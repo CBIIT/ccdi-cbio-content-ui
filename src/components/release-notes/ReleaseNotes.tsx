@@ -1,8 +1,8 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import { fetchContent } from '@/utilities/data-fetching';
-import modules from '@/utilities/modules.json';
+import { useModules } from '@/components/modules/ModulesProvider';
 import { processMarkdown } from './handleReleaseNotes';
 
 type ProcessedReleaseNotesModule = {
@@ -12,11 +12,15 @@ type ProcessedReleaseNotesModule = {
   path: string;
 };
 
-const releaseNotesModules = Object.values(modules.releases).flat().reverse();
-
 export default function ReleaseNotes({ handleTabClick }: {
   handleTabClick: (tabId: string) => void
 }) {
+  const { releases } = useModules();
+  const releaseNotesModules = useMemo(
+    () => Object.values(releases).flat().reverse(),
+    [releases]
+  );
+
   const [releaseNotes, setReleaseNotes] = useState<ProcessedReleaseNotesModule[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,6 +29,7 @@ export default function ReleaseNotes({ handleTabClick }: {
 
   useEffect(() => {
     const loadData = async () => {
+      setLoading(true);
       try {
         const formattedReleaseNotes = await Promise.all(
           releaseNotesModules.map(async module => {
@@ -48,7 +53,7 @@ export default function ReleaseNotes({ handleTabClick }: {
     };
 
     loadData();
-  }, []);
+  }, [releaseNotesModules]);
 
   useEffect(() => {
     if (loading) return;
@@ -83,7 +88,7 @@ export default function ReleaseNotes({ handleTabClick }: {
         }
       });
     };
-  }, [loading]);
+  }, [loading, handleTabClick]);
 
   if (loading) {
     return <div>Loading...</div>;
