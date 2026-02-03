@@ -34,8 +34,8 @@ export default function ReleaseNotes({ handleTabClick }: {
         const formattedReleaseNotes = await Promise.all(
           releaseNotesModules.map(async module => {
             const fetchedContent = await fetchContent(module.path);
-            const headerContent = fetchedContent.split('</div>')[0];
-            const isHtmlIncluded = !!fetchedContent.split('</div>')[1];
+            const [headerContent, afterHeader] = fetchedContent.split('</div>');
+            const isHtmlIncluded = !!afterHeader;
             const fetchedProcessedContent = await processMarkdown(fetchedContent);
             const combinedContent = isHtmlIncluded
               ? headerContent + '</div>' + fetchedProcessedContent
