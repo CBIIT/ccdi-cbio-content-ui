@@ -18,7 +18,7 @@
   "dependencies": {
     "base-64": "^1.0.0",
     "fuse.js": "^7.1.0",
-    "next": "^15.5.7",
+    "next": "^15.5.8",
     "postcss": "^8.5.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -43,8 +43,9 @@
     "@vitest/ui": "^4.0.15",
     "babel-plugin-styled-components": "^2.1.4",
     "eslint": "^9",
-    "eslint-config-next": "^15.5.7",
+    "eslint-config-next": "^15.5.8",
     "gh-pages": "^6.3.0",
+    "lodash": "^4.17.23",
     "tailwindcss": "^4.1.4",
     "typescript": "^5",
     "vitest": "^4.0.15"

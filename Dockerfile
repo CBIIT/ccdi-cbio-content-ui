@@ -26,12 +26,9 @@ COPY . .
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED=1
-ARG NEXT_PUBLIC_CONTENT_API_TOKEN
-ENV NEXT_PUBLIC_CONTENT_API_TOKEN=${NEXT_PUBLIC_CONTENT_API_TOKEN}
 ARG NEXT_PUBLIC_VERSION
 ENV NEXT_PUBLIC_VERSION=${NEXT_PUBLIC_VERSION}
-# Create .env file with the GitHub token
-RUN echo "NEXT_PUBLIC_CONTENT_API_TOKEN=${NEXT_PUBLIC_CONTENT_API_TOKEN}" > .env
+# Create .env file
 RUN echo "NEXT_PUBLIC_VERSION=${NEXT_PUBLIC_VERSION}" >> .env
 RUN npm run build
 
@@ -63,8 +60,6 @@ USER nextjs
 EXPOSE 3001
 # Set the environment variable for the port
 ENV PORT=3001
-ARG NEXT_PUBLIC_CONTENT_API_TOKEN
-ENV NEXT_PUBLIC_CONTENT_API_TOKEN=${NEXT_PUBLIC_CONTENT_API_TOKEN}
 ARG NEXT_PUBLIC_VERSION
 ENV NEXT_PUBLIC_VERSION=${NEXT_PUBLIC_VERSION}
 
@@ -73,4 +68,4 @@ ENV NEXT_PUBLIC_VERSION=${NEXT_PUBLIC_VERSION}
 ENV HOSTNAME="0.0.0.0"
 CMD ["node", "server.js"]
 
-# docker build --build-arg NEXT_PUBLIC_CONTENT_API_TOKEN=<your_token_here> --build-arg NEXT_PUBLIC_VERSION=<your_version_here> -t ccdi-cbio-content-ui .
+# docker build --build-arg NEXT_PUBLIC_VERSION=<your_version_here> -t ccdi-cbio-content-ui .

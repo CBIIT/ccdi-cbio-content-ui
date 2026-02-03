@@ -1,102 +1,32 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { fetchDatasetContent } from '@/utilities/data-fetching';
-import { DatasetHeader } from './DatasetHeader';
-import { DatasetContent } from './DatasetContent';
-import { UpdatedDatasetBody } from './UpdatedDatasetBody';
-import { GitHubDataset } from '@/app/page';
-import {
-  processMarkdown,
-  extractTitles,
-  extractSubtitles,
-  extractDates,
-  extractContent
-} from './handleDatasets';
+import { fetchContent } from '@/utilities/data-fetching';
+import { useModules } from '@/components/modules/ModulesProvider';
 
-import {
-  processMarkdown as updatedProcessMarkdown,
-  extractTitles as updatedExtractTitles,
-  extractH2Content as updatedExtractH2Content,
-  extractSubtitles as updatedExtractSubtitles,
-  extractH3Contents as updatedExtractH3Contents,
-  extractDataCategories as updatedExtractDataCategories,
-  extractH5Contents as updatedExtractH5Contents
-} from './handleUpdatedDatasets';
+import { processMarkdown } from './handleDatasets';
 
-interface ProcessedGitHubDataset {
-  titles?: {
-    id: string;
-    text: string;
-  }[];
-  subtitles?: {
-    id: string;
-    text: string;
-  }[];
-  dates?: {
-    id: string;
-    text: string;
-  }[];
-  dataCategories?: {
-    id: string;
-    text: string;
-  }[];
-  content?: string;
-  h2Content?: string;
-  h3Contents?: string[];
-  h5Contents?: string[];
-  name: string;
+interface ProcessedDatasetsModule {
+  fetchedProcessedContent: string,
+  title: string;
+  id: string;
   path: string;
-  type: string;
-  sha?: string;
 }
 
-export default function DataAccessCards({ datasets, tier }: { datasets: GitHubDataset[], tier: string }) {
-  const [processedDatasets, setProcessedDatasets] = useState<(ProcessedGitHubDataset | null)[]>([]);
+export default function DataAccessCards() {
+  const { datasets: datasetsModules } = useModules();
+  const [processedDatasets, setProcessedDatasets] = useState<ProcessedDatasetsModule[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadData = async () => {
+      setLoading(true);
       try {
         const formattedDatasets = await Promise.all(
-          datasets.map(async dataset => {
-            const slug = dataset?.name.replace('.md', '');
-            if (!slug) {
-              return null;
-            }
-            if (slug === 'dataset_1') {
-              const fetchedContent = await fetchDatasetContent(slug, tier);
-              const fetchedProcessedContent = await updatedProcessMarkdown(fetchedContent);
-              const titles = updatedExtractTitles(fetchedProcessedContent);
-              const h2Content = updatedExtractH2Content(fetchedProcessedContent);
-              const subtitles = updatedExtractSubtitles(fetchedProcessedContent);
-              const h3Contents = updatedExtractH3Contents(fetchedProcessedContent);
-              const dataCategories = updatedExtractDataCategories(fetchedProcessedContent);
-              const h5Contents = updatedExtractH5Contents(fetchedProcessedContent);
-              return {
-                ...dataset,
-                titles,
-                subtitles,
-                dataCategories,
-                h2Content,
-                h3Contents,
-                h5Contents
-              };
-            } else {
-              const fetchedContent = await fetchDatasetContent(slug, tier);
-              const fetchedProcessedContent = await processMarkdown(fetchedContent);
-              const titles = extractTitles(fetchedProcessedContent);
-              const subtitles = extractSubtitles(fetchedProcessedContent);
-              const dates = extractDates(fetchedProcessedContent);
-              const content = extractContent(fetchedProcessedContent);
-              return {
-                ...dataset,
-                titles,
-                subtitles,
-                dates,
-                content
-              };
-            }
+          datasetsModules.map(async module => {
+            const fetchedContent = await fetchContent(module.path);
+            const fetchedProcessedContent = await processMarkdown(fetchedContent);
+            return { ...module, fetchedProcessedContent };
           })
         );
         setProcessedDatasets(formattedDatasets);
@@ -108,7 +38,7 @@ export default function DataAccessCards({ datasets, tier }: { datasets: GitHubDa
     };
 
     loadData();
-  }, []);
+  }, [datasetsModules]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -124,28 +54,14 @@ export default function DataAccessCards({ datasets, tier }: { datasets: GitHubDa
                 if (!processedDataset) return null;
                 return (
                   <article
-                    key={processedDataset.sha}
+                    key={processedDataset.id}
                     className="overflow-hidden mb-2.5 p-2 w-full bg-white rounded border border-solid border-neutral-300"
                   >
-                    {processedDataset.name === 'dataset_1.md' ? (
-                      <UpdatedDatasetBody
-                        title={processedDataset.titles?.[0].text || ''}
-                        subtitles={processedDataset.subtitles || []}
-                        dataCategories={processedDataset.dataCategories || []}
-                        h2Content={processedDataset.h2Content || ''}
-                        h3Contents={processedDataset.h3Contents || []}
-                        h5Contents={processedDataset.h5Contents || []}
-                      />
-                    ) : (
-                      <>
-                        <DatasetHeader
-                          title={processedDataset.titles?.[0]?.text || ''}
-                          date={processedDataset.dates?.[0]?.text || ''}
-                          subtitle={processedDataset.subtitles?.[0]?.text || ''}
-                        />
-                        <DatasetContent content={processedDataset.content || ''} />
-                      </>
-                    )}
+                    <section
+                      className="w-full text-sm font-semibold leading-5 text-neutral-800 max-md:max-w-full"
+                      dangerouslySetInnerHTML={{ __html: processedDataset.fetchedProcessedContent }}
+                    >
+                    </section>
                   </article>
                 );
               })}

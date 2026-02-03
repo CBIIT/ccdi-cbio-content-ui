@@ -1,70 +1,49 @@
 'use client';
 
 import { FC, useState, useEffect, useRef } from 'react';
-import { fetchAboutData } from '@/utilities/data-fetching';
-import { getTierName } from '@/utilities/environment';
+import { fetchContent } from '@/utilities/data-fetching';
+import { useModules } from '@/components/modules/ModulesProvider';
 import Image from 'next/image';
-import { AboutContent } from '@/components/about/AboutContent';
-import {
-  processMarkdown,
-  extractTitles,
-  extractMainContent,
-  extractContactContent,
-} from '@/components/about/handleAbout';
+import { processMarkdown } from '@/components/about/handleAbout';
 import headerImg from '../../../assets/about/cBio_About_Header.svg';
 import headerImgMobile from '../../../assets/about/cBio_About_Header_mobile.svg';
 import headerImgTablet from '../../../assets/about/cBio_About_Header_tablet.svg';
 
-interface GitHubAbout {
-  name: string;
+type ProcessedAboutModule = {
+  fetchedProcessedContent: string;
+  title: string;
+  id: string;
   path: string;
-  type: string;
-}
-
-interface ProcessedGitHubAbout {
-  titles: {
-    id: string;
-    text: string;
-  }[];
-  mainContent: string;
-  contactContent: string;
-  name: string;
-  path: string;
-  type: string;
-  sha?: string;
-}
+};
 
 const About: FC = () => {
-  const [processedAbouts, setProcessedAbouts] = useState<ProcessedGitHubAbout[]>([]);
+  const { about: aboutModules } = useModules();
+  const [processedAbouts, setProcessedAbouts] = useState<ProcessedAboutModule[]>([]);
   const [loading, setLoading] = useState(true);
 
   const mainContentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const loadData = async () => {
-      if (typeof window !== 'undefined') {
-        try {
-          const { aboutFiles, content } = await fetchAboutData(getTierName(window.location.hostname));
-          const formattedAbouts = await Promise.all(
-            aboutFiles.map(async (fetchedAbout: GitHubAbout) => {
-              const fetchedProcessedContent = await processMarkdown(content);
-              const titles = extractTitles(fetchedProcessedContent);
-              const mainContent = extractMainContent(fetchedProcessedContent);
-              const contactContent = extractContactContent(fetchedProcessedContent);
-              return { ...fetchedAbout, titles, mainContent, contactContent };
-            })
-          );
-          setProcessedAbouts(formattedAbouts);
-        } catch (error) {
-          console.error(error);
-        } finally {
-          setLoading(false);
-        }
+      setLoading(true);
+      try {
+        const formattedAbouts = await Promise.all(
+          aboutModules.map(async module => {
+            const fetchedContent = await fetchContent(module.path);
+            const fetchedProcessedContent = await processMarkdown(fetchedContent);
+            return { ...module, fetchedProcessedContent };
+          })
+        );
+        setProcessedAbouts(formattedAbouts);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
     };
 
     loadData();
-  }, []);
+  }, [aboutModules]);
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {
@@ -122,28 +101,17 @@ const About: FC = () => {
       <section id="about" className="pt-10 pb-1 bg-white">
         <div className="container lg:mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
           <div className="prose prose-lg max-w-none">
-            {processedAbouts.length > 0 && processedAbouts.map(processedAbout => (
-              <div key={processedAbout.sha}>
-                <AboutContent content={processedAbout.mainContent} />
-                <h2
-                  className="
-                    text-[25px] lg:text-[22px]
-                    font-[Poppins]
-                    font-normal
-                    leading-[26px]
-                    tracking-[-0.05px] lg:tracking-[-0.044px]
-                    text-[#05555C]
-                    mt-10 lg:mt-15
-                    mb-2 flex items-center
-                  "
+            {processedAbouts.length > 0 && processedAbouts.map(processedAbout => {
+              if (!processedAbout) return null;
+              return (
+                <section
+                  key={processedAbout.id}
+                  className="pt-0.5 mt-1 w-full text-sm font-semibold leading-5 text-neutral-800 max-md:max-w-full"
+                  dangerouslySetInnerHTML={{ __html: processedAbout.fetchedProcessedContent }}
                 >
-                  {processedAbout.titles[0].text}
-                </h2>
-                <div className="contact-section">
-                  <AboutContent content={processedAbout.contactContent} />
-                </div>
-              </div>
-            ))}
+                </section>
+              );
+            })}
           </div>
         </div>
       </section>
