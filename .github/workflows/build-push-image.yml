@@ -63,7 +63,7 @@ jobs:
 
           - name: Run Trivy vulnerability scanner
             id: trivy-scan
-            uses: aquasecurity/trivy-action@c1824fd6edce30d7ab345a9989de00bbd46ef284     # v0.34.0
+            uses: aquasecurity/trivy-action@v0.34.2     # v0.34.2
             with:
                 image-ref: '${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}'
                 format: 'table'
