@@ -1,5 +1,8 @@
 # Setup Node
 FROM node:22-alpine3.22 AS base
+# Update OpenSSL in base so all stages (deps, build, production) get patched version.
+# Fixes CVE-2025-4575, CVE-2025-15467 (stack buffer overflow in CMS parsing).
+RUN apk upgrade openssl
 
 # # Upgrade npm (pin version for reproducibility; use npm@latest if you prefer)
 # RUN npm install -g npm@latest \
@@ -10,8 +13,6 @@ FROM node:22-alpine3.22 AS base
 FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk upgrade && apk --no-cache add git
-# Update OpenSSL to fix CVE-2025-4575
-RUN apk upgrade openssl
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package*.json ./
