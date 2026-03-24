@@ -1,6 +1,6 @@
 # Setup Node
 FROM node:24-alpine3.22 AS base
-# Refresh index and upgrade OpenSSL so all stages get patched version (fixes CVE-2025-15467, CVE-2025-4575).
+# Refresh index and upgrade OpenSSL so all stages get patched version (fixes CVE-2025-15467, CVE-2025-4575, CVE-2026-2673).
 # apk update is required so the build sees the latest openssl/libssl3; both packages must be upgraded.
 RUN apk update && apk upgrade --no-cache
 
