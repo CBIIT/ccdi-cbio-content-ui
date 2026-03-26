@@ -6,12 +6,12 @@ import Dataset from '@/components/datasets/Dataset';
 
 const tabs = [
   {
-    id: 'application-release-notes',
-    label: 'Application Release Notes'
-  },
-  {
     id: 'dataset-updates',
     label: 'Dataset Updates'
+  },
+  {
+    id: 'application-release-notes',
+    label: 'Application Release Notes'
   }
 ];
 
@@ -79,8 +79,8 @@ export default function Home() {
           </div>
         </section>
         <section>
-          {activeTabId === tabs[0].id && <ReleaseNotes handleTabClick={handleTabClick} />}
-          {activeTabId === tabs[1].id && <Dataset />}
+          {activeTabId === tabs[0].id && <Dataset />}
+          {activeTabId === tabs[1].id && <ReleaseNotes handleTabClick={handleTabClick} />}
         </section>
       </div>
     </main>
