@@ -2,8 +2,7 @@
 FROM node:24-alpine3.22 AS base
 # Refresh index and upgrade OpenSSL so all stages get patched version (fixes CVE-2025-15467, CVE-2025-4575, CVE-2026-2673).
 # apk update is required so the build sees the latest openssl/libssl3; both packages must be upgraded.
-RUN apk update && apk upgrade --no-cache \
-    && apk add --no-cache --upgrade openssl
+RUN apk update && apk upgrade --no-cache
 
 # # Upgrade npm (pin version for reproducibility; use npm@latest if you prefer)
 # RUN npm install -g npm@latest \
@@ -15,6 +14,7 @@ FROM base AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
 RUN apk --no-cache add git
 RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache --upgrade openssl
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
