@@ -32,3 +32,7 @@ body {
   color: var(--foreground);
   font-family: var(--font-open-sans), Arial, Helvetica, sans-serif;
 }
+
+.about-header-image img {
+  height: 214px;
+}

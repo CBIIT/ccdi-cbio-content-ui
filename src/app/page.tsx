@@ -1,13 +1,88 @@
-import { DatasetProcessingInfo } from "@/components/datasets/DatasetProcessingInfo";
+'use client';
+import { useState, KeyboardEvent, useEffect, useRef } from 'react';
+import { TabItem } from '@/components/TabItem';
+import ReleaseNotes from '@/components/release-notes/ReleaseNotes';
+import Dataset from '@/components/datasets/Dataset';
 
-export default async function Home() {
-  return <HomeContent/>;
-}
+const tabs = [
+  {
+    id: 'dataset-updates',
+    label: 'Dataset Updates'
+  },
+  {
+    id: 'application-release-notes',
+    label: 'Application Release Notes'
+  }
+];
 
-function HomeContent() {
+export default function Home() {
+  const [activeTabId, setActiveTabId] = useState(tabs[0].id);
+
+  const mainContentRef = useRef<HTMLDivElement>(null);
+
+  const handleTabClick = (tabId: string) => {
+    setActiveTabId(tabId);
+  };
+
+  const handleKeyDown = (event: KeyboardEvent, tabId: string) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      handleTabClick(tabId);
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      event.preventDefault();
+      const currentIndex = tabs.findIndex(tab => tab.id === activeTabId);
+      const nextIndex = event.key === 'ArrowLeft'
+        ? (currentIndex - 1 + tabs.length) % tabs.length
+        : (currentIndex + 1) % tabs.length;
+      handleTabClick(tabs[nextIndex].id);
+    }
+  };
+
+  useEffect(() => {
+    const observer = new ResizeObserver(() => {
+      const height = mainContentRef.current?.scrollHeight;
+      window.parent.postMessage(['setHeight', height], '*');
+    });
+    if (mainContentRef.current) {
+      observer.observe(mainContentRef.current);
+    }
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
   return (
     <main>
-      <DatasetProcessingInfo />
+      <div ref={mainContentRef}>
+        <h1 className="sr-only">Dataset and Release Notes</h1>
+        <section className="flex relative flex-col gap-1.5 items-center self-stretch bg-sky-50 border-b border-solid border-b-cyan-600 h-[88px] max-sm:h-auto">
+          <div className="flex relative flex-col gap-1.5 justify-end items-start self-stretch max-w-[1260px] mx-30 max-sm:mx-5">
+            <nav
+              className="flex relative gap-6 items-end self-stretch h-[88px] max-w-[1380px] max-sm:flex-row max-md:h-auto max-sm:h-auto"
+              role="tablist"
+              aria-label="Dataset and Release Notes Navigation"
+            >
+              {tabs.map((tab) => (
+                <div
+                  key={tab.id}
+                  onKeyDown={(e) => handleKeyDown(e, tab.id)}
+                >
+                  <TabItem
+                    isActive={activeTabId === tab.id}
+                    onClick={() => handleTabClick(tab.id)}
+                  >
+                    {tab.label}
+                  </TabItem>
+                </div>
+              ))}
+            </nav>
+          </div>
+        </section>
+        <section>
+          {activeTabId === tabs[0].id && <Dataset />}
+          {activeTabId === tabs[1].id && <ReleaseNotes handleTabClick={handleTabClick} />}
+        </section>
+      </div>
     </main>
   );
 }
