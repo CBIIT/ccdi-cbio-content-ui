@@ -32,6 +32,14 @@ function rehypeCustomTheme() {
         node.properties = node.properties || {};
         node.properties.className = ['mb-1'];
       }
+      if (node.tagName === 'th') {
+        node.properties = node.properties || {};
+        node.properties.className = ['px-2', 'border', 'border-gray-500'];
+      }
+      if (node.tagName === 'td') {
+        node.properties = node.properties || {};
+        node.properties.className = ['px-2', 'border', 'border-gray-500'];
+      }
       if (node.tagName === 'h2') {
         node.properties = node.properties || {};
         node.properties.className = [
